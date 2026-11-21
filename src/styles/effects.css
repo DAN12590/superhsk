@@ -1,5 +1,5 @@
-:root { --ink-trail: rgba(31, 27, 22, 0.72); }
-@media (prefers-color-scheme: dark) { :root { --ink-trail: rgba(241, 232, 218, 0.5); } }
+:root { --ink-trail: rgb(31, 27, 22); }
+@media (prefers-color-scheme: dark) { :root { --ink-trail: rgb(241, 232, 218); } }
 
 /* ——— page layers ——— */
 body { position: relative; overflow-x: clip; }
@@ -21,8 +21,8 @@ body::before { /* faint practice paper over the whole page */
 @media (prefers-color-scheme: dark) { .bg-glyph { opacity: 0.05; } }
 
 /* ——— the ink left by the mouse ——— */
-.ink-trail { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 40; pointer-events: none; mix-blend-mode: multiply; }
-@media (prefers-color-scheme: dark) { .ink-trail { mix-blend-mode: screen; } }
+.ink-trail { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 40; pointer-events: none; mix-blend-mode: multiply; opacity: 0.78; }
+@media (prefers-color-scheme: dark) { .ink-trail { mix-blend-mode: screen; opacity: 0.5; } }
 
 /* ——— back to top ——— */
 .totop {
