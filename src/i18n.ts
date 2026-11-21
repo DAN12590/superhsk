@@ -44,6 +44,7 @@ export const copy = {
       done: 'Well done. That is how every character is practised in the app.',
       again: 'Write it again',
     },
+    stats: { label: 'The course in numbers', items: [['54', 'units'], ['561', 'lessons'], ['978', 'HSK 1–3 words'], ['0', 'ads']] },
     try: { title: 'Try it now', lead: 'Watch 学中文 being written stroke by stroke, then write 学 yourself in the empty square.' },
     final: { title: 'Start with 你好.', lead: 'SuperHSK is coming to Google Play soon. Free, with no account and no ads.' },
     tones: {
@@ -92,6 +93,7 @@ export const copy = {
       done: 'Muy bien. Así se practica cada carácter en la app.',
       again: 'Escribirlo otra vez',
     },
+    stats: { label: 'El curso en cifras', items: [['54', 'unidades'], ['561', 'lecciones'], ['978', 'palabras de HSK 1–3'], ['0', 'anuncios']] },
     try: { title: 'Pruébalo ahora', lead: 'Mira cómo se escribe 学中文 trazo a trazo y luego escribe tú 学 en el cuadro vacío.' },
     final: { title: 'Empieza por 你好.', lead: 'SuperHSK llega muy pronto a Google Play. Gratis, sin cuenta y sin anuncios.' },
     tones: {

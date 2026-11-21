@@ -2,6 +2,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import Lenis from 'lenis';
+import { startInk } from './ink';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -74,9 +75,12 @@ function tour() {
     const down = i > current;
     steps.forEach((s, k) => s.classList.toggle('on', k === i));
     dots.forEach((d, k) => d.classList.toggle('on', k === i));
-    gsap.fromTo(steps[i], { autoAlpha: 0, y: down ? 24 : -24 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power3.out', overwrite: true });
-    gsap.set(steps[current], { autoAlpha: 0 });
-    shots.forEach((s, k) => { if (k !== i && k !== current) gsap.set(s, { opacity: 0, zIndex: 0 }); });
+    // Stop anything still moving, so two steps can never show at once.
+    gsap.killTweensOf(steps);
+    steps.forEach((s, k) => { if (k !== i) gsap.set(s, { autoAlpha: 0, y: 0 }); });
+    gsap.fromTo(steps[i], { autoAlpha: 0, y: down ? 24 : -24 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' });
+    gsap.killTweensOf(shots);
+    shots.forEach((s, k) => { if (k !== i && k !== current) gsap.set(s, { opacity: 0, zIndex: 0, clipPath: 'none' }); });
     gsap.set(shots[current], { zIndex: 1 });
     gsap.fromTo(shots[i], { opacity: 1, zIndex: 2, clipPath: down ? 'inset(100% 0% 0% 0% round 0)' : 'inset(0% 0% 100% 0% round 0)' },
       { clipPath: 'inset(0% 0% 0% 0% round 0)', duration: 0.7, ease: 'expo.out', overwrite: true });
@@ -98,6 +102,46 @@ function heroPhones() {
   gsap.to('.hero-phone .phone:not(.back)', { rotate: 6, yPercent: -6, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 }
 
+/** Faint characters behind the page drift at their own speed. */
+function backdrop() {
+  // One character per screen of page, so short pages are not crowded.
+  const glyphs = [...document.querySelectorAll<HTMLElement>('.bg-glyph')];
+  const room = Math.max(2, Math.round(document.documentElement.scrollHeight / innerHeight));
+  glyphs.forEach((g, i) => { g.hidden = i % Math.max(1, Math.ceil(glyphs.length / room)) !== 0; });
+  glyphs.filter((g) => !g.hidden).forEach((g) => {
+    const speed = Number(g.dataset.speed || 0);
+    gsap.to(g, { yPercent: speed * 100, ease: 'none', scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: true } });
+  });
+}
+
+/** Numbers count up when they come into view. */
+function stats() {
+  document.querySelectorAll<HTMLElement>('.stat .num').forEach((el) => {
+    const to = Number(el.dataset.to);
+    const o = { v: 0 };
+    el.textContent = '0';
+    gsap.to(o, {
+      v: to, duration: 1.6, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 88%' },
+      onUpdate: () => { el.textContent = Math.round(o.v).toLocaleString(document.documentElement.lang); },
+    });
+  });
+}
+
+/** The ribbon of words runs on its own and speeds up with the scroll. */
+function ribbon() {
+  const track = document.querySelector<HTMLElement>('.ribbon-track');
+  if (!track) return;
+  const loop = gsap.to(track, { xPercent: -50, duration: 40, ease: 'none', repeat: -1 });
+  ScrollTrigger.create({
+    trigger: track, start: 'top bottom', end: 'bottom top',
+    onUpdate: (st) => {
+      const v = Math.min(6, 1 + Math.abs(st.getVelocity()) / 400);
+      loop.timeScale(st.direction < 0 ? -v : v);
+      gsap.to(loop, { timeScale: st.direction < 0 ? -1 : 1, duration: 1.2, ease: 'power2.out', overwrite: true, delay: 0.1 });
+    },
+  });
+}
+
 /** Lists come in one row after another as they enter. */
 function lists() {
   const targets = '.drills li, .steps li, .words li, .faq details, .keys .key';
@@ -109,12 +153,30 @@ function lists() {
   });
 }
 
+// Back to top, with a ring that shows how far down the page you are.
+let topListening = false;
+function toTop() {
+  const update = () => {
+    const btn = document.querySelector<HTMLButtonElement>('.totop');
+    if (!btn) return;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    btn.querySelector<SVGCircleElement>('.ring')!.style.strokeDashoffset = String(1 - (max > 0 ? scrollY / max : 0));
+    btn.classList.toggle('show', scrollY > innerHeight * 0.8);
+  };
+  const btn = document.querySelector<HTMLButtonElement>('.totop');
+  if (btn) btn.onclick = () => (lenis ? lenis.scrollTo(0, { duration: 1.4 }) : scrollTo({ top: 0, behavior: 'smooth' }));
+  if (!topListening) { addEventListener('scroll', update, { passive: true }); topListening = true; }
+  update();
+}
+
 document.addEventListener('astro:page-load', () => {
+  toTop();
+  startInk();
   ctx?.revert();
   ScrollTrigger.getAll().forEach((t) => t.kill());
   if (reduced()) return;
   smoothScroll();
   lenis?.scrollTo(0, { immediate: true });
-  ctx = gsap.context(() => { headings(); heroPhones(); tour(); build(); lists(); });
+  ctx = gsap.context(() => { backdrop(); headings(); heroPhones(); ribbon(); tour(); stats(); build(); lists(); });
   document.fonts.ready.then(() => ScrollTrigger.refresh());
 });

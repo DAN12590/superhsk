@@ -9,6 +9,13 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = copy[lang];
 const word = ['学', '中', '文'];
+const es = lang === 'es';
+const ribbon: [string, string, string][] = [
+  ['你好', 'nǐ hǎo', es ? 'hola' : 'hello'], ['谢谢', 'xièxie', es ? 'gracias' : 'thank you'], ['朋友', 'péngyou', es ? 'amigo' : 'friend'],
+  ['咖啡', 'kāfēi', es ? 'café' : 'coffee'], ['学习', 'xuéxí', es ? 'estudiar' : 'to study'], ['今天', 'jīntiān', es ? 'hoy' : 'today'],
+  ['喜欢', 'xǐhuan', es ? 'gustar' : 'to like'], ['中国', 'Zhōngguó', es ? 'China' : 'China'], ['旅游', 'lǚyóu', es ? 'viajar' : 'to travel'],
+  ['加油', 'jiāyóu', es ? '¡ánimo!' : 'go for it!'],
+];
 // Chao tone letters on a 1–5 scale, drawn left to right: 55, 35, 214, 51.
 const contours = ['M10 10 L190 10', 'M10 50 L190 10', 'M10 70 C50 98 95 98 190 30', 'M10 10 L190 90'];
 ---
@@ -23,7 +30,7 @@ const contours = ['M10 10 L190 10', 'M10 50 L190 10', 'M10 70 C50 98 95 98 190 3
       </div>
       <div class="hero-phone">
         <div class="phone">
-          <img class="shot on" src={url(`shots/${lang}/today.webp`)} alt="" width="720" height="1600" fetchpriority="high" />
+          <img class="shot on" src={url(`shots/${lang}/${lang === 'en' ? 'today' : 'lesson'}.webp`)} alt="" width="720" height="1600" fetchpriority="high" />
         </div>
         <div class="phone back" aria-hidden="true">
           <img class="shot on" src={url(`shots/${lang}/word.webp`)} alt="" width="720" height="1600" />
@@ -31,7 +38,19 @@ const contours = ['M10 10 L190 10', 'M10 50 L190 10', 'M10 70 C50 98 95 98 190 3
       </div>
     </section>
 
+    <div class="ribbon" aria-hidden="true">
+      <div class="ribbon-track">
+        {[0, 1].map(() => ribbon.map(([hz, py, mn]) => <span class="rw"><b lang="zh-CN">{hz}</b><i>{py}</i><em>{mn}</em></span>))}
+      </div>
+    </div>
+
     <Tour lang={lang} />
+
+    <section class="stats" aria-label={t.stats.label}>
+      {t.stats.items.map(([n, label]) => (
+        <div class="stat"><span class="num" data-to={n}>{n}</span><span class="lbl">{label}</span></div>
+      ))}
+    </section>
 
     <section class="block try">
       <div class="head">
