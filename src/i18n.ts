@@ -13,12 +13,14 @@ export const routes: Record<Lang, Record<Page, string>> = {
 
 export const nav: Record<Lang, { page: Page; label: string }[]> = {
   en: [
+    { page: 'home', label: 'Home' },
     { page: 'method', label: 'Method' },
     { page: 'levels', label: 'Levels' },
     { page: 'faq', label: 'Questions' },
     { page: 'privacy', label: 'Privacy' },
   ],
   es: [
+    { page: 'home', label: 'Inicio' },
     { page: 'method', label: 'Método' },
     { page: 'levels', label: 'Niveles' },
     { page: 'faq', label: 'Preguntas' },
