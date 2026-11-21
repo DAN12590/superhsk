@@ -1,0 +1,44 @@
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+
+/* ——— 木 → 林 → 森, written by the scroll ——— */
+.build { margin-top: clamp(80px, 11vw, 150px); }
+.build-pin {
+  min-height: 100vh; min-height: 100svh;
+  display: grid; align-content: center; gap: clamp(32px, 5vw, 56px);
+  padding: 48px var(--gutter);
+}
+.build-copy { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px clamp(32px, 6vw, 96px); align-items: end; }
+.build-copy h2 { font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.02; letter-spacing: -0.035em; max-width: 13ch; }
+.build-copy p { color: var(--muted); max-width: 34rem; }
+.build-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 5vw, 72px); }
+.build-char { position: relative; margin: 0; }
+.build-char .cell { width: 100%; }
+.build-char svg { display: block; width: 100%; height: 100%; }
+.build-char .outline { fill: var(--guide); }
+.build-char .ink { fill: none; stroke: var(--ink); stroke-width: 220; stroke-linecap: round; stroke-linejoin: round; }
+.build-char figcaption { margin-top: 16px; display: flex; gap: 12px; align-items: baseline; }
+.build-char .py { font-size: clamp(1.4rem, 2.4vw, 2rem); font-weight: 600; letter-spacing: -0.02em; }
+.build-char .mn { color: var(--muted); }
+.plus {
+  position: absolute; top: 50%; right: calc(clamp(28px, 5vw, 72px) / -2); transform: translate(50%, -100%);
+  color: var(--seal); font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 600;
+}
+.build-hint { color: var(--muted); font-size: 0.9375rem; }
+@media (max-width: 760px) {
+  .build-copy { grid-template-columns: minmax(0, 1fr); }
+  .build-row { gap: 22px; }
+  .plus { display: none; }
+  .build-char figcaption { flex-direction: column; gap: 0; }
+}
+
+/* the tone dot */
+.chart .dot { fill: var(--seal); visibility: hidden; }
+
+@media (max-width: 620px) {
+  .bar { row-gap: 14px; }
+  .bar nav { width: 100%; margin-left: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; white-space: nowrap; }
+  .bar nav .lang { margin-left: auto; }
+}

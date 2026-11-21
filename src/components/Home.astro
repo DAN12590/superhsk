@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Build from './Build.astro';
 import { common, copy, routes, url, type Lang } from '../i18n';
 
 interface Props { lang: Lang }
@@ -35,20 +36,22 @@ const contours = ['M10 10 L190 10', 'M10 50 L190 10', 'M10 70 C50 98 95 98 190 3
       </figure>
     </section>
 
+    <Build lang={lang} />
+
     <section class="block tones">
       <div class="head">
         <h2>{t.tones.title}</h2>
         <p>{t.tones.lead}</p>
-        <p class="novoice" hidden>{t.tones.noVoice}</p>
-      </div>
+              </div>
       <div class="tonepad">
         <svg class="chart" viewBox="0 0 200 100" aria-hidden="true">
           {[10, 30, 50, 70, 90].map((y) => <line x1="0" x2="200" y1={y} y2={y} />)}
-          {contours.map((d, i) => <path class={`c c${i + 1}`} d={d} pathLength="1" />)}
+          {contours.map((d, i) => <path class={`c c${i + 1}`} d={d} />)}
+          <circle class="dot" r="6" cx="-20" cy="-20" />
         </svg>
         <div class="keys">
           {t.tones.items.map((item, i) => (
-            <button type="button" class="key" data-tone={i + 1} data-hz={item.hz}>
+            <button type="button" class="key" data-tone={i + 1} data-audio={url(`audio/ma${i + 1}.mp3`)}>
               <span class="py">{item.py}</span>
               <span class="hz">{item.hz}</span>
               <span class="mn">{item.meaning}</span>
@@ -91,6 +94,7 @@ const contours = ['M10 10 L190 10', 'M10 50 L190 10', 'M10 70 C50 98 95 98 190 3
 
 <script>
   import HanziWriter from 'hanzi-writer';
+  import gsap from 'gsap';
 
   const data = import.meta.glob('../data/*.json', { import: 'default' });
   const load = (c: string, done: (d: never) => void) => { data[`../data/${c}.json`]().then((d) => done(d as never)); };
@@ -145,28 +149,33 @@ const contours = ['M10 10 L190 10', 'M10 50 L190 10', 'M10 70 C50 98 95 98 190 3
     setTimeout(async () => {
       for (const w of writers) await w.animateCharacter();
       startQuiz();
-    }, 400);
+    }, 900);
   }
 
   function tones() {
     const pad = document.querySelector('.tonepad');
     if (!pad) return;
-    const voice = () => speechSynthesis.getVoices().find((v) => v.lang.replace('_', '-').toLowerCase().startsWith('zh-cn'))
-      ?? speechSynthesis.getVoices().find((v) => v.lang.toLowerCase().startsWith('zh'));
+    const chart = pad.querySelector<SVGSVGElement>('.chart')!;
+    const dot = chart.querySelector<SVGCircleElement>('.dot')!;
+    let audio: HTMLAudioElement | null = null;
     pad.querySelectorAll<HTMLButtonElement>('.key').forEach((key) => {
       key.onclick = () => {
         pad.querySelectorAll('.key').forEach((k) => k.classList.toggle('on', k === key));
-        const chart = pad.querySelector('.chart')!;
-        chart.setAttribute('data-tone', key.dataset.tone!);
         const path = chart.querySelector<SVGPathElement>(`.c${key.dataset.tone}`)!;
-        chart.querySelectorAll('.c').forEach((p) => p.classList.remove('draw')); void path.getBoundingClientRect(); path.classList.add('draw');
-        if (!('speechSynthesis' in window)) return;
-        const v = voice();
-        if (!v) { document.querySelector<HTMLElement>('.novoice')!.hidden = false; return; }
-        speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(key.dataset.hz);
-        u.voice = v; u.lang = v.lang; u.rate = 0.7;
-        speechSynthesis.speak(u);
+        audio?.pause();
+        audio = new Audio(key.dataset.audio);
+        audio.play().catch(() => {});
+        // The curve is drawn while the syllable sounds; the dot rides along it.
+        const len = path.getTotalLength();
+        chart.querySelectorAll<SVGPathElement>('.c').forEach((p) => { gsap.killTweensOf(p); gsap.set(p, { autoAlpha: p === path ? 1 : 0 }); });
+        gsap.killTweensOf(dot);
+        const state = { t: 0 };
+        gsap.fromTo(path, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.75, ease: 'power1.inOut' });
+        gsap.fromTo(dot, { autoAlpha: 1 }, { autoAlpha: 1, duration: 0.01 });
+        gsap.to(state, {
+          t: 1, duration: 0.75, ease: 'power1.inOut',
+          onUpdate: () => { const pt = path.getPointAtLength(state.t * len); dot.setAttribute('cx', String(pt.x)); dot.setAttribute('cy', String(pt.y)); },
+        });
       };
     });
   }

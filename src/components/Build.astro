@@ -1,0 +1,64 @@
+---
+/**
+ * A pinned section: while the reader scrolls, 木, 林 and 森 are written stroke by stroke,
+ * showing how characters are built from pieces. The strokes come from Make Me a Hanzi
+ * (hanzi-writer-data), drawn at build time as SVG: each stroke is a thick median line,
+ * clipped by the stroke outline, whose dash offset GSAP ties to the scroll position.
+ */
+import mu from '../data/木.json';
+import lin from '../data/林.json';
+import sen from '../data/森.json';
+import type { Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+type CharData = { strokes: string[]; medians: number[][][] };
+
+const T = {
+  en: {
+    title: 'Characters are built from pieces',
+    lead: 'Many characters reuse the same parts. Learn 木 and you are already halfway to 林 and 森. The app shows you these pieces as you go.',
+    items: [['mù', 'tree'], ['lín', 'grove'], ['sēn', 'forest']],
+    hint: 'Keep scrolling',
+  },
+  es: {
+    title: 'Los caracteres se construyen con piezas',
+    lead: 'Muchos caracteres repiten las mismas partes. Si aprendes 木, ya tienes medio camino hecho para 林 y 森. La app te enseña estas piezas sobre la marcha.',
+    items: [['mù', 'árbol'], ['lín', 'arboleda'], ['sēn', 'bosque']],
+    hint: 'Sigue bajando',
+  },
+}[lang];
+
+const chars = [['木', mu], ['林', lin], ['森', sen]] as [string, CharData][];
+const median = (pts: number[][]) => 'M' + pts.map(([x, y]) => `${x} ${y}`).join(' L');
+---
+<section class="build" aria-labelledby="build-title">
+  <div class="build-pin">
+    <div class="build-copy">
+      <h2 id="build-title">{T.title}</h2>
+      <p>{T.lead}</p>
+    </div>
+    <div class="build-row">
+      {chars.map(([hz, data], i) => (
+        <figure class="build-char">
+          <div class="cell big">
+            <svg viewBox="0 0 1024 1024" role="img" aria-label={`${hz} ${T.items[i][0]}, ${T.items[i][1]}`}>
+              <g transform="translate(0 900) scale(1 -1)">
+                {data.strokes.map((d) => <path class="outline" d={d} />)}
+                {data.strokes.map((d, s) => (
+                  <>
+                    <clipPath id={`clip-${i}-${s}`}><path d={d} /></clipPath>
+                    <path class="ink" d={median(data.medians[s])} clip-path={`url(#clip-${i}-${s})`} />
+                  </>
+                ))}
+              </g>
+            </svg>
+          </div>
+          <figcaption><span class="py">{T.items[i][0]}</span> <span class="mn">{T.items[i][1]}</span></figcaption>
+          {i < 2 && <span class="plus" aria-hidden="true">→</span>}
+        </figure>
+      ))}
+    </div>
+    <p class="build-hint" aria-hidden="true">{T.hint}</p>
+  </div>
+</section>

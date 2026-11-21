@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/pages.css';
+import '../styles/motion.css';
 import { ClientRouter } from 'astro:transitions';
 import { common, nav, routes, url, EMAIL, type Lang, type Page } from '../i18n';
 
@@ -46,5 +47,6 @@ const home = url(routes[lang].home);
     <span>{c.contact}: <a href={`mailto:${EMAIL}`}>{EMAIL}</a></span>
     {nav[lang].map((item) => <a href={url(routes[lang][item.page])}>{item.label}</a>)}
   </footer>
+  <script>import "../scripts/motion.ts";</script>
 </body>
 </html>
