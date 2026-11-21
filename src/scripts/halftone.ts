@@ -3,9 +3,9 @@
 const SPACING = 14;
 const NOISE_STEP = SPACING * 4;
 const NOISE_SCALE = 270;
-const DOT_RADIUS = 2.8;
+const DOT_RADIUS = 3;
 const FOCUS_RADIUS = 185;
-const FOCUS_GROWTH = 2.6;
+const FOCUS_GROWTH = 3.4;
 const FOCUS_IDLE = 180;
 const AMBIENT_FRAME_INTERVAL = 80;
 const FOCUS_FRAME_INTERVAL = 32;
