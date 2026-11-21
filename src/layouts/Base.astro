@@ -14,8 +14,8 @@ import { ClientRouter } from 'astro:transitions';
 import Backdrop from '../components/Backdrop.astro';
 import { common, footerNav, nav, routes, url, EMAIL, type Lang, type Page } from '../i18n';
 
-interface Props { lang: Lang; title: string; description: string; page: Page }
-const { lang, title, description, page } = Astro.props;
+interface Props { lang: Lang; title: string; description: string; page: Page; noindex?: boolean }
+const { lang, title, description, page, noindex = false } = Astro.props;
 const c = common[lang];
 const other: Lang = lang === 'en' ? 'es' : 'en';
 const home = url(routes[lang].home);
@@ -27,6 +27,7 @@ const home = url(routes[lang].home);
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  {noindex && <meta name="robots" content="noindex, noarchive" />}
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />

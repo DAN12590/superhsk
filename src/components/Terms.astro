@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import { EMAIL, routes, url, type Lang } from '../i18n';
-import { HSK_NOTICE, OWNER_ADDRESS, OWNER_COUNTRY, OWNER_ID, OWNER_NAME } from '../legal';
+import Owner from './Owner.astro';
+import { HSK_NOTICE } from '../legal';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -15,7 +16,7 @@ const T = {
     updated: 'Last updated on 21 November 2026.',
     description: 'Terms for using the SuperHSK app to learn Chinese.',
     providerTitle: 'Who provides the app',
-    provider: `SuperHSK is provided by ${OWNER_NAME} (tax ID ${OWNER_ID}), based at ${OWNER_ADDRESS}, ${OWNER_COUNTRY.en}. By using the app, you agree to these terms.`,
+    provider: ['SuperHSK is provided by ', ' (full details in the ', 'legal notice', '). By using the app, you agree to these terms.'],
     sections: [
       ['Using the app', 'The app is free. We grant you a personal, non-exclusive and non-transferable licence to use it. You may not copy or commercially exploit our original content, or decompile the app for redistribution.'],
       ['AI-generated content', 'AI answers and corrections are generated automatically and may contain errors. They are not professional advice. Review them before relying on them. You can flag inappropriate content using “Report a problem” in each exercise.'],
@@ -37,7 +38,7 @@ const T = {
     updated: 'Actualizados el 21 de noviembre de 2026.',
     description: 'Términos para usar la app SuperHSK para aprender chino.',
     providerTitle: 'Quién ofrece la app',
-    provider: `SuperHSK la ofrece ${OWNER_NAME} (NIF ${OWNER_ID}), con domicilio en ${OWNER_ADDRESS}, ${OWNER_COUNTRY.es}. Al usar la app, aceptas estos términos.`,
+    provider: ['SuperHSK la ofrece ', ' (datos completos en el ', 'aviso legal', '). Al usar la app, aceptas estos términos.'],
     sections: [
       ['Uso de la app', 'La app es gratis. Te damos una licencia personal, no exclusiva e intransferible para usarla. No puedes copiar ni explotar comercialmente nuestro contenido propio, ni descompilar la app para redistribuirla.'],
       ['Contenido generado por IA', 'Las respuestas y correcciones de la IA se generan automáticamente y pueden contener errores. No son asesoramiento profesional. Revísalas antes de fiarte de ellas. Puedes señalar contenido inadecuado con «Avisar de un fallo» en cada ejercicio.'],
@@ -55,12 +56,12 @@ const T = {
   },
 }[lang];
 ---
-<Base lang={lang} title={T.title} description={T.description} page="terms">
+<Base lang={lang} title={T.title} description={T.description} page="terms" noindex>
   <main class="doc">
     <h1>{T.h1}</h1>
     <p class="updated">{T.updated}</p>
     <h2>{T.providerTitle}</h2>
-    <p>{T.provider}</p>
+    <p>{T.provider[0]}<Owner field="name" />{T.provider[1]}<a href={url(routes[lang].legal)}>{T.provider[2]}</a>{T.provider[3]}</p>
     {T.sections.map(([h, body]) => (<><h2>{h}</h2><p set:html={body} /></>))}
   </main>
 </Base>

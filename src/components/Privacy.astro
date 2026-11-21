@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import { EMAIL, type Lang } from '../i18n';
-import { OWNER_ADDRESS, OWNER_COUNTRY, OWNER_ID, OWNER_NAME } from '../legal';
+import { EMAIL, routes, url, type Lang } from '../i18n';
+import Owner from './Owner.astro';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -16,7 +16,7 @@ const P = {
     updated: 'Last updated on 21 November 2026.',
     summary: 'SuperHSK has no accounts and no analytics. Your progress is stored only on your phone. Data leaves your phone only when you use a feature that needs it — AI exercises, speech recognition, a video you choose to watch, or sending us a message — and only what that feature needs.',
     controllerTitle: 'Who we are',
-    controller: `SuperHSK is an app for learning Chinese. The data controller is ${OWNER_NAME} (tax ID ${OWNER_ID}), based at ${OWNER_ADDRESS}, ${OWNER_COUNTRY.en}.`,
+    controller: ['SuperHSK is an app for learning Chinese. The data controller is ', '. Their full details are in the ', 'legal notice', '.'],
     contact: 'For any question about this policy, write to',
     localTitle: 'Data stored on your phone',
     localData: 'Your course progress, reviews, settings and statistics are stored only on your device. We cannot see them. If you export a backup, the file is saved where you choose and is not sent to us. Uninstalling the app or clearing its data deletes all of it.',
@@ -54,7 +54,7 @@ const P = {
     updated: 'Actualizada el 21 de noviembre de 2026.',
     summary: 'SuperHSK no tiene cuentas ni analítica. Tu progreso se guarda solo en tu móvil. Los datos solo salen del móvil cuando usas una función que los necesita —ejercicios con IA, reconocimiento de voz, un vídeo que eliges ver o enviarnos un mensaje— y solo lo que esa función necesita.',
     controllerTitle: 'Quiénes somos',
-    controller: `SuperHSK es una app para aprender chino. El responsable del tratamiento es ${OWNER_NAME} (NIF ${OWNER_ID}), con domicilio en ${OWNER_ADDRESS}, ${OWNER_COUNTRY.es}.`,
+    controller: ['SuperHSK es una app para aprender chino. El responsable del tratamiento es ', '. Sus datos completos están en el ', 'aviso legal', '.'],
     contact: 'Para cualquier duda sobre esta política, escribe a',
     localTitle: 'Datos guardados en tu móvil',
     localData: 'Tu progreso del curso, los repasos, los ajustes y las estadísticas se guardan solo en tu dispositivo. Nosotros no podemos verlos. Si exportas una copia de seguridad, el archivo se guarda donde elijas y no nos llega. Desinstalar la app o borrar sus datos lo elimina todo.',
@@ -88,13 +88,13 @@ const P = {
   },
 }[lang];
 ---
-<Base lang={lang} title={P.title} description={P.summary} page="privacy">
+<Base lang={lang} title={P.title} description={P.summary} page="privacy" noindex>
   <main class="doc">
     <h1>{P.h1}</h1>
     <p class="updated">{P.updated}</p>
     <p class="summary">{P.summary}</p>
     <h2>{P.controllerTitle}</h2>
-    <p>{P.controller} {P.contact} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</p>
+    <p>{P.controller[0]}<Owner field="name" />{P.controller[1]}<a href={url(routes[lang].legal)}>{P.controller[2]}</a>{P.controller[3]} {P.contact} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</p>
     <h2>{P.localTitle}</h2>
     <p>{P.localData}</p>
     <h2>{P.outTitle}</h2>

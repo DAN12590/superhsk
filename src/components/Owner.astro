@@ -1,0 +1,19 @@
+---
+// Renders one owner field encoded, so it is not plain text in the HTML.
+// A small script decodes it in the browser.
+import { OWNER, type OwnerField } from '../legal';
+
+interface Props { field: OwnerField }
+const { field } = Astro.props;
+const encoded = Buffer.from(OWNER[field], 'utf-8').toString('base64');
+---
+<span data-owner={encoded}></span>
+<script>
+  const fill = () => {
+    document.querySelectorAll<HTMLElement>('[data-owner]').forEach((el) => {
+      const bytes = Uint8Array.from(atob(el.dataset.owner ?? ''), (c) => c.charCodeAt(0));
+      el.textContent = new TextDecoder().decode(bytes);
+    });
+  };
+  document.addEventListener('astro:page-load', fill);
+</script>

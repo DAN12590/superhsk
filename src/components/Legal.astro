@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import { EMAIL, type Lang } from '../i18n';
-import { HSK_NOTICE, OWNER_ADDRESS, OWNER_COUNTRY, OWNER_ID, OWNER_NAME } from '../legal';
+import Owner from './Owner.astro';
+import { HSK_NOTICE } from '../legal';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -15,7 +16,7 @@ const L = {
     description: 'SuperHSK ownership, trademarks and third-party credits.',
     ownerTitle: 'Owner',
     disclosure: 'Owner information under Article 10 of Spain’s Law 34/2002 on Information Society Services and Electronic Commerce (LSSI-CE).',
-    owner: `The owner is ${OWNER_NAME} (tax ID ${OWNER_ID}), based at ${OWNER_ADDRESS}, ${OWNER_COUNTRY.en}.`,
+    owner: ['The owner is ', ' (tax ID ', '), based at ', ', Spain.'],
     activity: 'The owner develops the SuperHSK app and this informational website.',
     contact: 'You can contact the owner at',
     ipTitle: 'Intellectual property',
@@ -33,7 +34,7 @@ const L = {
     description: 'Titularidad, marcas y créditos de terceros de SuperHSK.',
     ownerTitle: 'Titular',
     disclosure: 'Datos del titular conforme al artículo 10 de la Ley 34/2002 de servicios de la sociedad de la información y de comercio electrónico (LSSI-CE).',
-    owner: `El titular es ${OWNER_NAME} (NIF ${OWNER_ID}), con domicilio en ${OWNER_ADDRESS}, ${OWNER_COUNTRY.es}.`,
+    owner: ['El titular es ', ' (NIF ', '), con domicilio en ', ', España.'],
     activity: 'El titular desarrolla la app SuperHSK y esta web informativa.',
     contact: 'Puedes contactar con el titular en',
     ipTitle: 'Propiedad intelectual',
@@ -59,12 +60,12 @@ const credits = [
   ['Lenis', 'https://github.com/darkroomengineering/lenis', 'MIT'],
 ];
 ---
-<Base lang={lang} title={L.title} description={L.description} page="legal">
+<Base lang={lang} title={L.title} description={L.description} page="legal" noindex>
   <main class="doc">
     <h1>{L.h1}</h1>
     <p class="updated">{L.updated}</p>
     <h2>{L.ownerTitle}</h2>
-    <p>{L.owner} {L.activity} {L.contact} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</p>
+    <p>{L.owner[0]}<Owner field="name" />{L.owner[1]}<Owner field="id" />{L.owner[2]}<Owner field="address" />{L.owner[3]} {L.activity} {L.contact} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</p>
     <p><a href={lssi}>{L.disclosure}</a></p>
     <h2>{L.ipTitle}</h2>
     <p>{L.ip}</p>
