@@ -1,5 +1,5 @@
 export type Lang = 'en' | 'es';
-export type Page = 'home' | 'method' | 'levels' | 'faq' | 'privacy';
+export type Page = 'home' | 'method' | 'levels' | 'faq' | 'privacy' | 'terms' | 'legal';
 
 export const EMAIL = 'danapps.dev@gmail.com';
 
@@ -7,8 +7,24 @@ export const EMAIL = 'danapps.dev@gmail.com';
 export const url = (path = '') => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path}`;
 
 export const routes: Record<Lang, Record<Page, string>> = {
-  en: { home: '', method: 'method/', levels: 'levels/', faq: 'faq/', privacy: 'privacy/' },
-  es: { home: 'es/', method: 'es/metodo/', levels: 'es/niveles/', faq: 'es/preguntas/', privacy: 'es/privacidad/' },
+  en: {
+    home: '',
+    method: 'method/',
+    levels: 'levels/',
+    faq: 'faq/',
+    privacy: 'privacy/',
+    terms: 'terms/',
+    legal: 'legal/',
+  },
+  es: {
+    home: 'es/',
+    method: 'es/metodo/',
+    levels: 'es/niveles/',
+    faq: 'es/preguntas/',
+    privacy: 'es/privacidad/',
+    terms: 'es/terminos/',
+    legal: 'es/aviso-legal/',
+  },
 };
 
 export const nav: Record<Lang, { page: Page; label: string }[]> = {
@@ -31,6 +47,11 @@ export const nav: Record<Lang, { page: Page; label: string }[]> = {
 export const common = {
   en: { other: 'Español', contact: 'Contact', status: 'Free, with no account.' },
   es: { other: 'English', contact: 'Contacto', status: 'Gratis y sin cuenta.' },
+};
+
+export const footerNav: typeof nav = {
+  en: [...nav.en, { page: 'terms', label: 'Terms' }, { page: 'legal', label: 'Legal notice' }],
+  es: [...nav.es, { page: 'terms', label: 'Términos' }, { page: 'legal', label: 'Aviso legal' }],
 };
 
 export const copy = {

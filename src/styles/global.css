@@ -133,13 +133,15 @@ p { margin: 0; }
 .foot .mark { color: var(--ink); font-size: 1rem; margin-right: auto; }
 .foot .seal { width: 26px; height: 26px; font-size: 16px; }
 
-/* ——— privacy policy ——— */
+/* ——— legal documents ——— */
 .doc { max-width: 46rem; padding: clamp(40px, 7vw, 96px) var(--gutter) 0; margin: 0 auto 0 0; }
 .doc h1 { font-size: clamp(2.6rem, 6vw, 4.5rem); line-height: 1; letter-spacing: -0.04em; }
 .doc .updated { margin-top: 16px; color: var(--muted); }
 .doc .summary { margin-top: 40px; padding-left: 22px; border-left: 4px solid var(--seal); font-size: 1.25rem; line-height: 1.55; }
 .doc h2 { font-size: 1.5rem; letter-spacing: -0.02em; margin: 56px 0 12px; }
 .doc p + p { margin-top: 12px; }
+.doc ul { padding-inline-start: 1.5em; }
+.doc li + li { margin-top: 0.4em; }
 .doc table { width: 100%; border-collapse: collapse; margin: 8px 0 20px; font-size: 1rem; }
 .doc th, .doc td { text-align: left; vertical-align: top; padding: 14px 16px 14px 0; border-bottom: 1.5px solid var(--guide); }
 .doc thead th { color: var(--muted); font-weight: 500; border-bottom-color: var(--grid); }

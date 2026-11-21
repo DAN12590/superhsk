@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import { EMAIL, routes, url, type Lang } from '../i18n';
+import { HSK_NOTICE, OWNER_ADDRESS, OWNER_COUNTRY, OWNER_ID, OWNER_NAME } from '../legal';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const credits = `${url(routes[lang].legal)}#credits`;
+const mail = `<a href="mailto:${EMAIL}">${EMAIL}</a>`;
+
+const T = {
+  en: {
+    title: 'Terms of use — SuperHSK',
+    h1: 'Terms of use',
+    updated: 'Last updated on 21 November 2026.',
+    description: 'Terms for using the SuperHSK app to learn Chinese.',
+    providerTitle: 'Who provides the app',
+    provider: `SuperHSK is provided by ${OWNER_NAME} (tax ID ${OWNER_ID}), based at ${OWNER_ADDRESS}, ${OWNER_COUNTRY.en}. By using the app, you agree to these terms.`,
+    sections: [
+      ['Using the app', 'The app is free. We grant you a personal, non-exclusive and non-transferable licence to use it. You may not copy or commercially exploit our original content, or decompile the app for redistribution.'],
+      ['AI-generated content', 'AI answers and corrections are generated automatically and may contain errors. They are not professional advice. Review them before relying on them. You can flag inappropriate content using “Report a problem” in each exercise.'],
+      ['Exam results', 'SuperHSK helps you study. It does not guarantee that you will pass the HSK or any other exam.'],
+      ['HSK', HSK_NOTICE.en],
+      ['Fair use of the app', 'Do not automate AI requests or try to bypass usage limits. Do not include other people’s personal data in messages you send us.'],
+      ['Messages you send us', 'When you send a message or problem report, you give us permission to use it to improve the app.'],
+      ['Optional video ads', 'Google AdMob serves optional video ads. The extra AI uses you earn have no monetary value and cannot be redeemed.'],
+      ['Availability', 'The app is provided as is. It may change, have bugs or be interrupted. AI features depend on third-party services and may be subject to limits.'],
+      ['Liability', 'Our liability is limited to the extent permitted by law. Nothing in these terms limits your statutory rights as a consumer.'],
+      ['Intellectual property', `The app’s code, design and original content belong to the owner. Third-party open data is used under its own licences. See the <a href="${credits}">credits and licences in the legal notice</a>.`],
+      ['Changes and applicable law', 'If these terms change, we will update this page and its date. Spanish law applies. If you are a consumer, you can bring a claim before the courts where you live.'],
+      ['Contact', `For questions about these terms, write to ${mail}.`],
+    ],
+  },
+  es: {
+    title: 'Términos de uso — SuperHSK',
+    h1: 'Términos de uso',
+    updated: 'Actualizados el 21 de noviembre de 2026.',
+    description: 'Términos para usar la app SuperHSK para aprender chino.',
+    providerTitle: 'Quién ofrece la app',
+    provider: `SuperHSK la ofrece ${OWNER_NAME} (NIF ${OWNER_ID}), con domicilio en ${OWNER_ADDRESS}, ${OWNER_COUNTRY.es}. Al usar la app, aceptas estos términos.`,
+    sections: [
+      ['Uso de la app', 'La app es gratis. Te damos una licencia personal, no exclusiva e intransferible para usarla. No puedes copiar ni explotar comercialmente nuestro contenido propio, ni descompilar la app para redistribuirla.'],
+      ['Contenido generado por IA', 'Las respuestas y correcciones de la IA se generan automáticamente y pueden contener errores. No son asesoramiento profesional. Revísalas antes de fiarte de ellas. Puedes señalar contenido inadecuado con «Avisar de un fallo» en cada ejercicio.'],
+      ['Resultados de los exámenes', 'SuperHSK te ayuda a estudiar. No garantiza que apruebes el HSK ni ningún otro examen.'],
+      ['HSK', HSK_NOTICE.es],
+      ['Uso correcto de la app', 'No automatices peticiones a la IA ni intentes saltarte sus límites. No incluyas datos personales de otras personas en los mensajes que nos envíes.'],
+      ['Mensajes que nos envías', 'Si nos envías un mensaje o un aviso de fallo, nos autorizas a usarlo para mejorar la app.'],
+      ['Vídeos de anuncios opcionales', 'Google AdMob sirve los vídeos de anuncios opcionales. Los usos extra de la IA que consigues no tienen valor económico ni se pueden canjear.'],
+      ['Disponibilidad', 'La app se ofrece tal cual. Puede cambiar, tener fallos o dejar de estar disponible. Las funciones con IA dependen de servicios de terceros y pueden tener límites.'],
+      ['Responsabilidad', 'Nuestra responsabilidad se limita en la medida que permita la ley. Estos términos respetan todos los derechos que te reconoce la ley como consumidor.'],
+      ['Propiedad intelectual', `El código, el diseño y el contenido propio de la app pertenecen al titular. Los datos abiertos de terceros se usan según sus propias licencias. Consulta los <a href="${credits}">créditos y licencias del aviso legal</a>.`],
+      ['Cambios y ley aplicable', 'Si cambian los términos, actualizaremos esta página y su fecha. Se aplica la ley española. Si eres consumidor, puedes acudir a los tribunales de tu domicilio.'],
+      ['Contacto', `Si tienes dudas sobre estos términos, escribe a ${mail}.`],
+    ],
+  },
+}[lang];
+---
+<Base lang={lang} title={T.title} description={T.description} page="terms">
+  <main class="doc">
+    <h1>{T.h1}</h1>
+    <p class="updated">{T.updated}</p>
+    <h2>{T.providerTitle}</h2>
+    <p>{T.provider}</p>
+    {T.sections.map(([h, body]) => (<><h2>{h}</h2><p set:html={body} /></>))}
+  </main>
+</Base>

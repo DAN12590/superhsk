@@ -1,10 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
 import { EMAIL, type Lang } from '../i18n';
+import { OWNER_ADDRESS, OWNER_COUNTRY, OWNER_ID, OWNER_NAME } from '../legal';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const mail = `<a href="mailto:${EMAIL}">${EMAIL}</a>`;
+const aepd = '<a href="https://www.aepd.es/">www.aepd.es</a>';
+const githubPrivacy = 'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement';
 
 const P = {
   en: {
@@ -12,10 +15,11 @@ const P = {
     h1: 'Privacy policy',
     updated: 'Last updated on 21 November 2026.',
     summary: 'SuperHSK has no accounts and no analytics. Your progress is stored only on your phone. Data leaves your phone only when you use a feature that needs it — AI exercises, speech recognition, a video you choose to watch, or sending us a message — and only what that feature needs.',
-    sections: [
-      ['Who we are', `SuperHSK is an app for learning Chinese made by an independent developer. For any question about this policy, write to ${mail}.`],
-      ['Data stored on your phone', 'Your course progress, reviews, settings and statistics are stored only on your device. We cannot see them. If you export a backup, the file is saved where you choose and is not sent to us. Uninstalling the app or clearing its data deletes all of it.'],
-    ],
+    controllerTitle: 'Who we are',
+    controller: `SuperHSK is an app for learning Chinese. The data controller is ${OWNER_NAME} (tax ID ${OWNER_ID}), based at ${OWNER_ADDRESS}, ${OWNER_COUNTRY.en}.`,
+    contact: 'For any question about this policy, write to',
+    localTitle: 'Data stored on your phone',
+    localData: 'Your course progress, reviews, settings and statistics are stored only on your device. We cannot see them. If you export a backup, the file is saved where you choose and is not sent to us. Uninstalling the app or clearing its data deletes all of it.',
     outTitle: 'Data that leaves your phone',
     cols: ['Feature', 'What is sent', 'Who receives it'],
     rows: [
@@ -26,10 +30,21 @@ const P = {
       ['Crash reports', 'The technical error, the app version, the phone model and the app language. No personal content.', 'Our feedback server, so the bug can be fixed.'],
     ],
     nosell: 'We do not sell your data, and we do not use it to identify you. Ads are only shown when you ask for a video.',
+    basesTitle: 'Why we process your data',
+    bases: [
+      'For AI exercises and speech recognition, we process data to provide the service you request (GDPR Article 6(1)(b)).',
+      'We process messages and problem reports with your consent when you send them (Article 6(1)(a)).',
+      `We have a legitimate interest in fixing bugs using crash reports (Article 6(1)(f)). You can object to that processing by writing to ${mail}.`,
+      'For optional video ads, we rely on your consent (Article 6(1)(a)). In the European Economic Area (EEA) and the UK, we ask for consent through Google’s consent form before showing personalised ads.',
+    ],
     rest: [
+      ['Service providers and international transfers', 'We use Groq, Inc. (United States) for AI exercises, Google LLC (United States) for Gemini, speech recognition and AdMob, and Cloudflare, Inc. for our feedback server. The developer receives feedback via Telegram. Transfers to the United States rely on the EU–U.S. Data Privacy Framework where the recipient participates, or on standard contractual clauses.'],
+      ['How long we keep data', 'We do not store the text from AI exercises. We keep messages and problem reports for up to 12 months and then delete them. We also keep crash reports for up to 12 months. Groq, Google and Cloudflare follow their own policies for the data they retain.'],
+      ['Your rights', `You can request access to your data, correction, deletion, restriction of processing or data portability, or object to processing, by writing to ${mail}. You can also withdraw your consent at any time. You have the right to file a complaint with the Spanish Data Protection Agency (${aepd}) or with the data protection authority in your country.`],
       ['Permissions', '<b>Microphone</b>, only for speaking exercises and only when you start one. <b>Notifications</b>, for the daily reminder if you turn it on. <b>Internet</b>, for AI exercises, speech recognition and messages; the rest of the app works offline.'],
-      ['Children', 'SuperHSK is not directed at children under 13 and does not knowingly collect their data.'],
+      ['Children', 'SuperHSK is not directed at children under 14 and does not knowingly collect their data. Outside Spain, a higher minimum age in your country applies.'],
       ['Deleting your data', `Everything the app stores is on your phone: uninstall the app or clear its data in Android settings to delete it. To ask us to delete a message you sent, write to ${mail}.`],
+      ['This website', `GitHub Pages (GitHub, Inc.) hosts this website. GitHub logs visitors’ IP addresses for security under its <a href="${githubPrivacy}">privacy statement</a>. The site uses no cookies or analytics and loads no third-party resources. The fonts are served from this website.`],
       ['Changes', 'If this policy changes, this page and its date will be updated.'],
     ],
   },
@@ -38,10 +53,11 @@ const P = {
     h1: 'Política de privacidad',
     updated: 'Actualizada el 21 de noviembre de 2026.',
     summary: 'SuperHSK no tiene cuentas ni analítica. Tu progreso se guarda solo en tu móvil. Los datos solo salen del móvil cuando usas una función que los necesita —ejercicios con IA, reconocimiento de voz, un vídeo que eliges ver o enviarnos un mensaje— y solo lo que esa función necesita.',
-    sections: [
-      ['Quiénes somos', `SuperHSK es una app para aprender chino hecha por un desarrollador independiente. Para cualquier duda sobre esta política, escribe a ${mail}.`],
-      ['Datos guardados en tu móvil', 'Tu progreso del curso, los repasos, los ajustes y las estadísticas se guardan solo en tu dispositivo. Nosotros no podemos verlos. Si exportas una copia de seguridad, el archivo se guarda donde elijas y no nos llega. Desinstalar la app o borrar sus datos lo elimina todo.'],
-    ],
+    controllerTitle: 'Quiénes somos',
+    controller: `SuperHSK es una app para aprender chino. El responsable del tratamiento es ${OWNER_NAME} (NIF ${OWNER_ID}), con domicilio en ${OWNER_ADDRESS}, ${OWNER_COUNTRY.es}.`,
+    contact: 'Para cualquier duda sobre esta política, escribe a',
+    localTitle: 'Datos guardados en tu móvil',
+    localData: 'Tu progreso del curso, los repasos, los ajustes y las estadísticas se guardan solo en tu dispositivo. Nosotros no podemos verlos. Si exportas una copia de seguridad, el archivo se guarda donde elijas y no nos llega. Desinstalar la app o borrar sus datos lo elimina todo.',
     outTitle: 'Datos que salen de tu móvil',
     cols: ['Función', 'Qué se envía', 'Quién lo recibe'],
     rows: [
@@ -52,10 +68,21 @@ const P = {
       ['Informes de cierres', 'El error técnico, la versión de la app, el modelo del móvil y el idioma de la app. Nada de contenido personal.', 'Nuestro servidor de mensajes, para poder arreglar el fallo.'],
     ],
     nosell: 'No vendemos tus datos y no los usamos para identificarte. Solo se muestran anuncios cuando pides un vídeo.',
+    basesTitle: 'Por qué tratamos tus datos',
+    bases: [
+      'Tratamos los datos de los ejercicios con IA y del reconocimiento de voz para prestarte el servicio que pides (art. 6.1.b del RGPD).',
+      'Tratamos los mensajes y avisos de fallos con tu consentimiento al enviarlos (art. 6.1.a).',
+      `Para los informes de cierres, tenemos un interés legítimo en arreglar fallos (art. 6.1.f). Puedes oponerte a ese tratamiento escribiendo a ${mail}.`,
+      'Para los vídeos de anuncios opcionales, la base es tu consentimiento (art. 6.1.a). En el Espacio Económico Europeo (EEE) y el Reino Unido, te lo pedimos mediante el formulario de consentimiento de Google antes de mostrarte anuncios personalizados.',
+    ],
     rest: [
+      ['Proveedores y transferencias internacionales', 'Usamos Groq, Inc. (EE. UU.) para los ejercicios con IA, Google LLC (EE. UU.) para Gemini, el reconocimiento de voz y AdMob, y Cloudflare, Inc. para el servidor de mensajes. El desarrollador recibe los mensajes por Telegram. Las transferencias a EE. UU. se amparan en el Marco de Privacidad de Datos UE-EE. UU. cuando el destinatario está adherido, o en cláusulas contractuales tipo.'],
+      ['Cuánto tiempo guardamos los datos', 'No guardamos el texto de los ejercicios con IA. Conservamos los mensajes y avisos de fallos como máximo 12 meses y después los borramos. También conservamos los informes de cierres como máximo 12 meses. Los datos que guarden Groq, Google y Cloudflare se rigen por sus propias políticas.'],
+      ['Tus derechos', `Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad escribiendo a ${mail}. También puedes retirar tu consentimiento en cualquier momento. Tienes derecho a reclamar ante la Agencia Española de Protección de Datos (${aepd}) o ante la autoridad de protección de datos de tu país.`],
       ['Permisos', '<b>Micrófono</b>, solo para los ejercicios de hablar y solo cuando empiezas uno. <b>Notificaciones</b>, para el recordatorio diario si lo activas. <b>Internet</b>, para la IA, el reconocimiento de voz y los mensajes; el resto de la app funciona sin conexión.'],
-      ['Menores', 'SuperHSK no está dirigida a menores de 13 años y no recoge sus datos a sabiendas.'],
+      ['Menores', 'SuperHSK no está dirigida a menores de 14 años y no recoge sus datos a sabiendas. Fuera de España, se aplica la edad mínima de tu país si es mayor.'],
       ['Borrar tus datos', `Todo lo que guarda la app está en tu móvil: desinstala la app o borra sus datos en los ajustes de Android para eliminarlo. Para pedirnos que borremos un mensaje que enviaste, escribe a ${mail}.`],
+      ['Esta web', `GitHub Pages (GitHub, Inc.) aloja esta web. GitHub registra la dirección IP de las visitas por seguridad, según su <a href="${githubPrivacy}">política de privacidad</a>. La web no usa cookies ni analítica ni carga recursos de terceros. Las fuentes se sirven desde la propia web.`],
       ['Cambios', 'Si esta política cambia, se actualizarán esta página y su fecha.'],
     ],
   },
@@ -66,7 +93,10 @@ const P = {
     <h1>{P.h1}</h1>
     <p class="updated">{P.updated}</p>
     <p class="summary">{P.summary}</p>
-    {P.sections.map(([h, body]) => (<><h2>{h}</h2><p set:html={body} /></>))}
+    <h2>{P.controllerTitle}</h2>
+    <p>{P.controller} {P.contact} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</p>
+    <h2>{P.localTitle}</h2>
+    <p>{P.localData}</p>
     <h2>{P.outTitle}</h2>
     <table>
       <thead><tr>{P.cols.map((c) => <th scope="col">{c}</th>)}</tr></thead>
@@ -77,6 +107,10 @@ const P = {
       </tbody>
     </table>
     <p>{P.nosell}</p>
+    <h2>{P.basesTitle}</h2>
+    <ul>
+      {P.bases.map((body) => <li set:html={body} />)}
+    </ul>
     {P.rest.map(([h, body]) => (<><h2>{h}</h2><p set:html={body} /></>))}
   </main>
 </Base>

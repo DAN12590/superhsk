@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import { EMAIL, type Lang } from '../i18n';
+import { HSK_NOTICE, OWNER_ADDRESS, OWNER_COUNTRY, OWNER_ID, OWNER_NAME } from '../legal';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const lssi = 'https://www.boe.es/buscar/act.php?id=BOE-A-2002-13758#a10';
+
+const L = {
+  en: {
+    title: 'Legal notice — SuperHSK',
+    h1: 'Legal notice',
+    updated: 'Last updated on 21 November 2026.',
+    description: 'SuperHSK ownership, trademarks and third-party credits.',
+    ownerTitle: 'Owner',
+    disclosure: 'Owner information under Article 10 of Spain’s Law 34/2002 on Information Society Services and Electronic Commerce (LSSI-CE).',
+    owner: `The owner is ${OWNER_NAME} (tax ID ${OWNER_ID}), based at ${OWNER_ADDRESS}, ${OWNER_COUNTRY.en}.`,
+    activity: 'The owner develops the SuperHSK app and this informational website.',
+    contact: 'You can contact the owner at',
+    ipTitle: 'Intellectual property',
+    ip: 'The code, design and original content of the SuperHSK app and website belong to the owner. Third-party materials are subject to their own licences.',
+    trademarks: 'Trademarks',
+    googlePlay: 'Google Play and the Google Play logo are trademarks of Google LLC.',
+    credits: 'Credits and licences',
+    linksTitle: 'External links',
+    links: 'The owners of linked websites are responsible for their content, availability and privacy practices.',
+  },
+  es: {
+    title: 'Aviso legal — SuperHSK',
+    h1: 'Aviso legal',
+    updated: 'Actualizado el 21 de noviembre de 2026.',
+    description: 'Titularidad, marcas y créditos de terceros de SuperHSK.',
+    ownerTitle: 'Titular',
+    disclosure: 'Datos del titular conforme al artículo 10 de la Ley 34/2002 de servicios de la sociedad de la información y de comercio electrónico (LSSI-CE).',
+    owner: `El titular es ${OWNER_NAME} (NIF ${OWNER_ID}), con domicilio en ${OWNER_ADDRESS}, ${OWNER_COUNTRY.es}.`,
+    activity: 'El titular desarrolla la app SuperHSK y esta web informativa.',
+    contact: 'Puedes contactar con el titular en',
+    ipTitle: 'Propiedad intelectual',
+    ip: 'El código, el diseño y el contenido propio de la app SuperHSK y de esta web pertenecen al titular. Los materiales de terceros se rigen por sus propias licencias.',
+    trademarks: 'Marcas',
+    googlePlay: 'Google Play y el logotipo de Google Play son marcas de Google LLC.',
+    credits: 'Créditos y licencias',
+    linksTitle: 'Enlaces externos',
+    links: 'Los titulares de las webs enlazadas son responsables de su contenido, su disponibilidad y sus prácticas de privacidad.',
+  },
+}[lang];
+
+const credits = [
+  ['CC-CEDICT (MDBG)', 'https://www.mdbg.net/chinese/dictionary?page=cc-cedict', 'CC BY-SA 4.0'],
+  ['complete-hsk-vocabulary (drkameleon)', 'https://github.com/drkameleon/complete-hsk-vocabulary', 'MIT'],
+  ['hsk-vocab-es (nar-ran)', 'https://github.com/nar-ran/hsk-vocab-es', 'MIT'],
+  ['Make Me a Hanzi (Shaunak Kishore)', 'https://github.com/skishore/makemeahanzi/blob/master/COPYING', lang === 'en' ? 'LGPL and Arphic Public License' : 'LGPL y Arphic Public License'],
+  ['Tatoeba', 'https://tatoeba.org/en/terms_of_use', 'CC BY 2.0 FR'],
+  ['Schibsted Grotesk', 'https://fontsource.org/fonts/schibsted-grotesk/about', 'SIL Open Font License 1.1'],
+  ['Noto Serif SC', 'https://fontsource.org/fonts/noto-serif-sc/about', 'SIL Open Font License 1.1'],
+  ['Hanzi Writer', 'https://github.com/chanind/hanzi-writer', 'MIT'],
+  ['GSAP', 'https://gsap.com/standard-license/', lang === 'en' ? 'GreenSock standard “no charge” licence' : 'licencia estándar gratuita de GreenSock'],
+  ['Lenis', 'https://github.com/darkroomengineering/lenis', 'MIT'],
+];
+---
+<Base lang={lang} title={L.title} description={L.description} page="legal">
+  <main class="doc">
+    <h1>{L.h1}</h1>
+    <p class="updated">{L.updated}</p>
+    <h2>{L.ownerTitle}</h2>
+    <p>{L.owner} {L.activity} {L.contact} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</p>
+    <p><a href={lssi}>{L.disclosure}</a></p>
+    <h2>{L.ipTitle}</h2>
+    <p>{L.ip}</p>
+    <h2>{L.trademarks}</h2>
+    <p>{HSK_NOTICE[lang]}</p>
+    <p>{L.googlePlay}</p>
+    <h2 id="credits">{L.credits}</h2>
+    <ul>
+      {credits.map(([name, source, licence]) => (
+        <li><a href={source}>{name}</a> — {licence}</li>
+      ))}
+    </ul>
+    <h2>{L.linksTitle}</h2>
+    <p>{L.links}</p>
+  </main>
+</Base>
