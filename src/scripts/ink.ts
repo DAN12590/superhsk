@@ -1,8 +1,8 @@
 /**
  * The mouse paints with a grungy ink brush: a rough stroke with ragged, bristly edges that turns
  * into dry-brush streaks when the brush runs low, drips that run down under gravity and splatter
- * on quick flicks. Everything it paints lives only a moment and then dries away, so the page never
- * fills up.
+ * on quick flicks. Everything it paints lives only a moment: the ink stays wet for a beat and then
+ * cracks and crumbles into specks and dry-brush streaks until it is gone, so the page never fills up.
  * Only for a mouse and without reduced motion.
  */
 
@@ -10,7 +10,10 @@ const TAU = Math.PI * 2;
 const STAMP = 128; // brush stamp texture size
 const CORE = 40; // radius of the stamp's solid core
 /** How long each mark lives, in ms. Short on purpose: a little trail, not a painted screen. */
-const LIFE = { stamp: 1150, drip: 1600, dot: 1300 };
+const LIFE = 1300;
+const DRY_FROM = 0.35; // share of its life a mark stays wet before it starts to crumble
+const LEVELS = 8; // steps of crumbling, from wet ink to the last specks
+const TILE = 384; // size of the paper-grain tile that decides where the ink cracks first
 const MAX_STAMPS = 1400;
 const MAX_DRIPS = 12;
 
@@ -22,6 +25,43 @@ function surface(size: number): [HTMLCanvasElement, CanvasRenderingContext2D] {
   c.width = c.height = size;
   const g = c.getContext('2d')!;
   return [c, g];
+}
+
+/**
+ * Crumbling masks, one per level: each keeps the paper-grain pixels above a cut, so as the level
+ * rises the ink breaks up into blotches, streaks along the fibres and fine grit. Because the grain
+ * is fixed to the screen, overlapping dabs of the same age crumble in exactly the same places.
+ */
+function dryingMasks() {
+  const v = new Float32Array(TILE * TILE);
+  const octave = (cw: number, ch: number, amp: number) => {
+    const nx = TILE / cw, ny = TILE / ch;
+    const lattice = Float32Array.from({ length: nx * ny }, () => Math.random());
+    const smooth = (f: number) => f * f * (3 - 2 * f);
+    for (let y = 0; y < TILE; y++) {
+      const gy = y / ch, y0 = Math.floor(gy), sy = smooth(gy - y0);
+      const r0 = y0 * nx, r1 = ((y0 + 1) % ny) * nx;
+      for (let x = 0; x < TILE; x++) {
+        const gx = x / cw, x0 = Math.floor(gx), sx = smooth(gx - x0), x1 = (x0 + 1) % nx;
+        const a = lattice[r0 + x0] + (lattice[r0 + x1] - lattice[r0 + x0]) * sx;
+        const b = lattice[r1 + x0] + (lattice[r1 + x1] - lattice[r1 + x0]) * sx;
+        v[y * TILE + x] += (a + (b - a) * sy) * amp;
+      }
+    }
+  };
+  octave(64, 64, 0.4); // blotches
+  octave(48, 12, 0.25); // streaks along the fibres
+  octave(12, 3, 0.15);
+  octave(2, 2, 0.2); // grit
+  const sorted = Float32Array.from(v).sort();
+  return Array.from({ length: LEVELS }, (_, l) => {
+    const cut = sorted[Math.floor((l / LEVELS) * (sorted.length - 1))];
+    const [c, g] = surface(TILE);
+    const img = g.createImageData(TILE, TILE);
+    for (let i = 0; i < v.length; i++) img.data[i * 4 + 3] = v[i] > cut ? 255 : 0;
+    g.putImageData(img, 0, 0);
+    return c;
+  });
 }
 
 /** A wet dab: a rough blob with a grainy rim and a few bristles poking out along the stroke (x axis). */
@@ -109,10 +149,13 @@ export function startInk() {
   canvas.setAttribute('aria-hidden', 'true');
   document.body.appendChild(canvas);
   const ctx = canvas.getContext('2d')!;
+  const layer = document.createElement('canvas'); // where each crumbling level is masked
+  const lctx = layer.getContext('2d')!;
+  const masks = dryingMasks().map((m) => lctx.createPattern(m, 'repeat')!);
   const dpr = Math.min(devicePixelRatio || 1, 2);
   const resize = () => {
-    canvas.width = innerWidth * dpr;
-    canvas.height = innerHeight * dpr;
+    layer.width = canvas.width = innerWidth * dpr;
+    layer.height = canvas.height = innerHeight * dpr;
   };
   resize();
   addEventListener('resize', resize);
@@ -138,10 +181,12 @@ export function startInk() {
   const drip = (x: number, y: number, w: number, t: number) => {
     if (drips.length >= MAX_DRIPS) return;
     drips.push({
-      x: x + rnd(-w, w) * 0.3, y: y + w * 0.3,
+      x: x + rnd(-w, w) * 0.3, y: y + w * 0.15,
       len: rnd(18, 60) * (Math.random() < 0.2 ? 2 : 1),
-      w: rnd(1.6, 1.6 + w * 0.08), bend: rnd(-4, 4), grow: rnd(500, 900), t,
+      w: rnd(1.6, 1.6 + w * 0.08), bend: rnd(-4, 4), grow: rnd(450, 800), t,
     });
+    // Now and then a drop falls loose below it.
+    if (Math.random() < 0.4) dots.push({ x: x + rnd(-6, 6), y: y + w * 0.5 + rnd(30, 90), r: rnd(1.2, 3), t });
   };
   const splat = (x: number, y: number, a: number, spread: number, n: number, reach: number, t: number) => {
     for (let i = 0; i < n; i++) {
@@ -198,27 +243,65 @@ export function startInk() {
   document.documentElement.addEventListener('pointerleave', lift);
   document.addEventListener('pointerdown', lift);
 
-  const expire = <T extends { t: number }>(list: T[], life: number, now: number) => {
+  const expire = <T extends { t: number }>(list: T[], now: number) => {
     let k = 0;
-    while (k < list.length && now - list[k].t > life) k++;
+    while (k < list.length && now - list[k].t > LIFE) k++;
     if (k) list.splice(0, k);
   };
-  const place = (img: HTMLCanvasElement, x: number, y: number, a: number, s: number, alpha: number) => {
-    const c = Math.cos(a) * s * dpr, sn = Math.sin(a) * s * dpr;
-    ctx.globalAlpha = alpha;
-    ctx.setTransform(c, sn, -sn, c, x * dpr, y * dpr);
-    ctx.drawImage(img, -img.width / 2, -img.height / 2);
+  /** 0 while wet, then 1…LEVELS-1 as the mark crumbles. */
+  const level = (t: number, now: number) => {
+    const k = (now - t) / LIFE;
+    return k < DRY_FROM ? 0 : Math.min(LEVELS - 1, 1 + Math.floor(((k - DRY_FROM) / (1 - DRY_FROM)) * (LEVELS - 1)));
   };
-  /** 1 while fresh, then eases to 0 once the mark starts to dry at `from` (0–1 of its life). */
-  const dryOut = (k: number, from: number) => (k < from ? 1 : (1 - (k - from) / (1 - from)) ** 1.4);
+
+  // Bounding box (CSS px) of what the current level painted, so only that area is masked.
+  let bx0 = 0, by0 = 0, bx1 = 0, by1 = 0;
+  const cover = (x: number, y: number, r: number) => {
+    bx0 = Math.min(bx0, x - r); by0 = Math.min(by0, y - r);
+    bx1 = Math.max(bx1, x + r); by1 = Math.max(by1, y + r);
+  };
+  const paintStamp = (g: CanvasRenderingContext2D, s: Stamp) => {
+    const c = Math.cos(s.a) * s.s * dpr, sn = Math.sin(s.a) * s.s * dpr;
+    g.setTransform(c, sn, -sn, c, s.x * dpr, s.y * dpr);
+    g.drawImage((s.dry ? tex.dry : tex.wet)[s.i], -STAMP / 2, -STAMP / 2);
+    cover(s.x, s.y, STAMP * 0.71 * s.s);
+  };
+  const paintDrip = (g: CanvasRenderingContext2D, d: Drip, now: number) => {
+    const grown = Math.min(1, (now - d.t) / d.grow);
+    const l = d.len * (1 - (1 - grown) ** 3); // runs quickly, then slows as it thins out
+    // A tapered runnel: wide where it leaves the stroke, thin as it runs, with a bead at the end.
+    const top = d.w * 1.3, low = d.w * 0.45, ex = d.x + d.bend * 0.4, ey = d.y + l, cx = d.x + d.bend;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.beginPath();
+    g.moveTo(d.x - top, d.y);
+    g.quadraticCurveTo(cx - (top + low) / 2, d.y + l / 2, ex - low, ey);
+    g.lineTo(ex + low, ey);
+    g.quadraticCurveTo(cx + (top + low) / 2, d.y + l / 2, d.x + top, d.y);
+    g.fill();
+    g.beginPath();
+    g.arc(d.x, d.y, top, 0, TAU);
+    g.fill();
+    g.beginPath();
+    g.arc(ex, ey, d.w * 1.1, 0, TAU);
+    g.fill();
+    cover(d.x, d.y, top + 6);
+    cover(ex, ey, d.w * 2 + 6);
+  };
+  const paintDot = (g: CanvasRenderingContext2D, d: Dot) => {
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.beginPath();
+    g.arc(d.x, d.y, d.r, 0, TAU);
+    g.fill();
+    cover(d.x, d.y, d.r + 1);
+  };
 
   let dirty = false;
   const frame = (now: number) => {
     requestAnimationFrame(frame);
     if (now - lastMove > 120) load = Math.min(1, load + 0.03);
-    expire(stamps, LIFE.stamp, now);
-    expire(drips, LIFE.drip, now);
-    expire(dots, LIFE.dot, now);
+    expire(stamps, now);
+    expire(drips, now);
+    expire(dots, now);
     if (!stamps.length && !drips.length && !dots.length) {
       if (dirty) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -231,42 +314,29 @@ export function startInk() {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (const s of stamps) {
-      const k = (now - s.t) / LIFE.stamp;
-      const shrink = 1 - 0.15 * Math.max(0, (k - 0.4) / 0.6);
-      place((s.dry ? tex.dry : tex.wet)[s.i], s.x, s.y, s.a, s.s * shrink, dryOut(k, 0.4));
+    // Wet ink goes straight onto the canvas; each crumbling level is painted on the layer, cut
+    // with its mask and then copied over.
+    for (let l = 0; l < LEVELS; l++) {
+      const g = l ? lctx : ctx;
+      g.fillStyle = color;
+      bx0 = by0 = Infinity;
+      bx1 = by1 = -Infinity;
+      for (const s of stamps) if (level(s.t, now) === l) paintStamp(g, s);
+      for (const d of drips) if (level(d.t, now) === l) paintDrip(g, d, now);
+      for (const d of dots) if (level(d.t, now) === l) paintDot(g, d);
+      if (!l || bx1 < bx0) continue;
+      const x0 = Math.max(0, Math.floor(bx0 * dpr)), y0 = Math.max(0, Math.floor(by0 * dpr));
+      const w = Math.min(layer.width, Math.ceil(bx1 * dpr)) - x0, h = Math.min(layer.height, Math.ceil(by1 * dpr)) - y0;
+      if (w <= 0 || h <= 0) continue;
+      lctx.setTransform(1, 0, 0, 1, 0, 0);
+      lctx.globalCompositeOperation = 'destination-in';
+      lctx.fillStyle = masks[l];
+      lctx.fillRect(x0, y0, w, h);
+      lctx.globalCompositeOperation = 'source-over';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.drawImage(layer, x0, y0, w, h, x0, y0, w, h);
+      lctx.clearRect(x0, y0, w, h);
     }
-
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = ctx.strokeStyle = color;
-    ctx.lineCap = 'round';
-    for (const d of drips) {
-      const age = now - d.t;
-      const g = Math.min(1, age / d.grow);
-      const l = d.len * (1 - (1 - g) ** 3); // runs quickly, then slows as it thins out
-      ctx.globalAlpha = dryOut(age / LIFE.drip, 0.4);
-      // A tapered runnel: wide where it leaves the stroke, thin as it runs, with a bead at the end.
-      const top = d.w * 1.3, low = d.w * 0.45, ex = d.x + d.bend * 0.4, ey = d.y + l, cx = d.x + d.bend;
-      ctx.beginPath();
-      ctx.moveTo(d.x - top, d.y);
-      ctx.quadraticCurveTo(cx - (top + low) / 2, d.y + l / 2, ex - low, ey);
-      ctx.lineTo(ex + low, ey);
-      ctx.quadraticCurveTo(cx + (top + low) / 2, d.y + l / 2, d.x + top, d.y);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, top * 1.4, 0, TAU);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(ex, ey, d.w * 1.1, 0, TAU);
-      ctx.fill();
-    }
-    for (const d of dots) {
-      ctx.globalAlpha = dryOut((now - d.t) / LIFE.dot, 0.45);
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, d.r, 0, TAU);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
   };
   requestAnimationFrame(frame);
 }
