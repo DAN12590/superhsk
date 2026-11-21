@@ -27,15 +27,15 @@ export const nav: Record<Lang, { page: Page; label: string }[]> = {
 };
 
 export const common = {
-  en: { other: 'Español', contact: 'Contact', status: 'Free, with no account and no ads.' },
-  es: { other: 'English', contact: 'Contacto', status: 'Gratis, sin cuenta y sin anuncios.' },
+  en: { other: 'Español', contact: 'Contact', status: 'Free, with no account.' },
+  es: { other: 'English', contact: 'Contacto', status: 'Gratis y sin cuenta.' },
 };
 
 export const copy = {
   en: {
     title: 'SuperHSK — Learn Chinese from zero to HSK 3',
     description:
-      'An Android course that takes you from your first character to HSK 3: lessons in order, tones, writing stroke by stroke, reading and speaking. Free, no account, no ads.',
+      'An Android course that takes you from your first character to HSK 3: lessons in order, tones, writing stroke by stroke, reading and speaking. Free, with no account.',
     hero: {
       title: 'Learn Chinese one stroke at a time.',
       lead: 'SuperHSK is a course for Android that starts from zero and takes you to HSK 3. Every word comes with its sound, its tones and its characters, written in the right order.',
@@ -44,9 +44,9 @@ export const copy = {
       done: 'Well done. That is how every character is practised in the app.',
       again: 'Write it again',
     },
-    stats: { label: 'The course in numbers', items: [['54', 'units'], ['561', 'lessons'], ['978', 'HSK 1–3 words'], ['0', 'ads']] },
+    stats: { label: 'The course in numbers', items: [['54', 'units'], ['561', 'lessons'], ['978', 'HSK 1–3 words'], ['4', 'HSK levels']] },
     try: { title: 'Try it now', lead: 'Watch 学中文 being written stroke by stroke, then write 学 yourself in the empty square.' },
-    final: { title: 'Start with 你好.', lead: 'SuperHSK is coming to Google Play soon. Free, with no account and no ads.' },
+    final: { title: 'Start with 你好.', lead: 'SuperHSK is coming to Google Play soon. Free, with no account.' },
     tones: {
       title: 'Four tones change the word',
       lead: 'The same syllable means four different things depending on the tone. Tap each one to hear it.',
@@ -75,7 +75,7 @@ export const copy = {
       title: 'Your progress stays with you',
       items: [
         'There is no account. Everything you learn is saved on your phone, and you can export a copy whenever you want.',
-        'There are no ads and no analytics.',
+        'There are no analytics. The course is free; if you want more AI uses without paying, you can watch a short video.',
         'Only the exercises that need it go online: the AI conversations, the speech recognition and the messages you send us.',
       ],
       link: 'Read the privacy policy',
@@ -84,7 +84,7 @@ export const copy = {
   es: {
     title: 'SuperHSK — Aprende chino desde cero hasta el HSK 3',
     description:
-      'Un curso para Android que te lleva de tu primer carácter al HSK 3: lecciones en orden, tonos, escritura trazo a trazo, lectura y conversación. Gratis, sin cuenta y sin anuncios.',
+      'Un curso para Android que te lleva de tu primer carácter al HSK 3: lecciones en orden, tonos, escritura trazo a trazo, lectura y conversación. Gratis y sin cuenta.',
     hero: {
       title: 'Aprende chino trazo a trazo.',
       lead: 'SuperHSK es un curso para Android que empieza desde cero y te lleva hasta el HSK 3. Cada palabra viene con su sonido, sus tonos y sus caracteres, escritos en el orden correcto.',
@@ -93,9 +93,9 @@ export const copy = {
       done: 'Muy bien. Así se practica cada carácter en la app.',
       again: 'Escribirlo otra vez',
     },
-    stats: { label: 'El curso en cifras', items: [['54', 'unidades'], ['561', 'lecciones'], ['978', 'palabras de HSK 1–3'], ['0', 'anuncios']] },
+    stats: { label: 'El curso en cifras', items: [['54', 'unidades'], ['561', 'lecciones'], ['978', 'palabras de HSK 1–3'], ['4', 'niveles HSK']] },
     try: { title: 'Pruébalo ahora', lead: 'Mira cómo se escribe 学中文 trazo a trazo y luego escribe tú 学 en el cuadro vacío.' },
-    final: { title: 'Empieza por 你好.', lead: 'SuperHSK llega muy pronto a Google Play. Gratis, sin cuenta y sin anuncios.' },
+    final: { title: 'Empieza por 你好.', lead: 'SuperHSK llega muy pronto a Google Play. Gratis y sin cuenta.' },
     tones: {
       title: 'Cuatro tonos cambian la palabra',
       lead: 'La misma sílaba significa cuatro cosas distintas según el tono. Toca cada una para oírla.',
@@ -124,7 +124,7 @@ export const copy = {
       title: 'Tu progreso se queda contigo',
       items: [
         'No hay cuenta. Todo lo que aprendes se guarda en tu móvil, y puedes exportar una copia cuando quieras.',
-        'No hay anuncios ni analítica.',
+        'No hay analítica. El curso es gratis; si quieres más usos de la IA sin pagar, puedes ver un vídeo corto.',
         'Solo se conectan los ejercicios que lo necesitan: las conversaciones con IA, el reconocimiento de voz y los mensajes que nos envías.',
       ],
       link: 'Leer la política de privacidad',
