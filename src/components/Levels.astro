@@ -42,8 +42,19 @@ const L = es
       <h1>{L.h1}</h1>
       <p class="lead">{L.lead}</p>
     </header>
-    {levels.map((lv) => (
+    <div class="stairs" aria-hidden="true">
+      {[[1, 294], [2, 491], [3, 978], [4, 1978]].map(([n, w]) => (
+        <div class={`stair ${n === 4 ? 'later' : ''}`} style={`--h:${Math.sqrt(w / 1978).toFixed(3)}`}>
+          <b class="stair-n">{n}</b>
+          {n === 4
+            ? <span class="stair-l">{es ? 'En actualizaciones' : 'In updates'}</span>
+            : <><span class="stair-w">{w}</span><span class="stair-l">{es ? 'palabras' : 'words'}</span></>}
+        </div>
+      ))}
+    </div>
+    {levels.map((lv, i) => (
       <section class={`level ${lv.later ? 'later' : ''}`}>
+        <span class="lv-big" aria-hidden="true">{i + 1}</span>
         <div class="lv-head">
           <h2>{lv.name}</h2>
           <span class="state">{lv.state}</span>

@@ -127,6 +127,14 @@ function stats() {
   });
 }
 
+/** The level stairs rise one after another. */
+function stairs() {
+  const el = document.querySelector('.stairs');
+  if (!el) return;
+  gsap.from('.stair', { scaleY: 0, duration: 1.1, ease: 'power3.out', stagger: 0.15, scrollTrigger: { trigger: el, start: 'top 85%' } });
+  gsap.utils.toArray<HTMLElement>('.lv-big').forEach((b) => gsap.fromTo(b, { yPercent: 30 }, { yPercent: -30, ease: 'none', scrollTrigger: { trigger: b.parentElement!, scrub: true } }));
+}
+
 /** The ribbon of words runs on its own and speeds up with the scroll. */
 function ribbon() {
   const track = document.querySelector<HTMLElement>('.ribbon-track');
@@ -177,6 +185,6 @@ document.addEventListener('astro:page-load', () => {
   if (reduced()) return;
   smoothScroll();
   lenis?.scrollTo(0, { immediate: true });
-  ctx = gsap.context(() => { backdrop(); headings(); heroPhones(); ribbon(); tour(); stats(); build(); lists(); });
+  ctx = gsap.context(() => { backdrop(); headings(); heroPhones(); ribbon(); tour(); stats(); build(); lists(); stairs(); });
   document.fonts.ready.then(() => ScrollTrigger.refresh());
 });

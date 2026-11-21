@@ -49,6 +49,8 @@ const F = {
       <h1>{F.h1}</h1>
       <p class="lead" set:html={`${F.lead} ${mail}`} />
     </header>
+    <div class="faq-wrap">
+    <div class="faq-stage" aria-hidden="true"><div class="cell big"><div class="stage-char" data-char="问"></div></div></div>
     <div class="faq">
       {F.items.map(([q, a]) => (
         <details name="faq">
@@ -57,5 +59,18 @@ const F = {
         </details>
       ))}
     </div>
+    </div>
   </main>
 </Base>
+
+<script>
+  import { drawCell } from '../scripts/draw';
+  document.addEventListener('astro:page-load', () => {
+    const el = document.querySelector<HTMLElement>('.faq-stage .stage-char');
+    if (!el) return;
+    const cell = drawCell(el, '问');
+    document.querySelectorAll('.faq details').forEach((d) => d.addEventListener('toggle', () => {
+      cell.show(document.querySelector('.faq details[open]') ? '答' : '问');
+    }));
+  });
+</script>

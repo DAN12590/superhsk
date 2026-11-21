@@ -48,20 +48,50 @@ const M = {
       <h1>{M.h1}</h1>
       <p class="lead">{M.lead}</p>
     </header>
-    <ol class="steps">
-      {M.steps.map((s, i) => (
-        <li>
-          <div class="cell small" aria-hidden="true"><span>{s.hz}</span></div>
-          <div class="body">
-            <span class="n">{i + 1}</span>
-            <h2>{s.title}</h2>
-            <p>{s.text}</p>
-          </div>
-          <p class="sample" lang="zh-CN">{s.sample}</p>
-        </li>
-      ))}
-    </ol>
+    <div class="method">
+      <div class="stage" aria-hidden="true">
+        <div class="cell big"><div class="stage-char" data-char={M.steps[0].hz}></div></div>
+        <p class="stage-n"><b>1</b> / {M.steps.length}</p>
+      </div>
+      <ol class="steps">
+        {M.steps.map((s, i) => (
+          <li data-hz={s.hz} data-i={i + 1}>
+            <div class="cell small" aria-hidden="true"><span>{s.hz}</span></div>
+            <div class="body">
+              <span class="n">{i + 1}</span>
+              <h2>{s.title}</h2>
+              <p>{s.text}</p>
+              {s.sample && <p class="sample" lang="zh-CN">{s.sample}</p>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
     <p class="after">{M.after}</p>
     <p class="links"><a href={url(routes[lang].levels)}>{M.levels}</a><a href={url(routes[lang].home)}>{M.back}</a></p>
   </main>
 </Base>
+
+<script>
+  import { drawCell } from '../scripts/draw';
+  document.addEventListener('astro:page-load', () => {
+    const el = document.querySelector<HTMLElement>('.stage-char');
+    if (!el) return;
+    const cell = drawCell(el, el.dataset.char!);
+    const n = document.querySelector('.stage-n b')!;
+    const items = [...document.querySelectorAll<HTMLElement>('.steps li')];
+    let on: HTMLElement | null = null;
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) {
+        if (!e.isIntersecting || e.target === on) continue;
+        on?.classList.remove('on');
+        on = e.target as HTMLElement;
+        on.classList.add('on');
+        n.textContent = on.dataset.i!;
+        cell.show(on.dataset.hz!);
+      }
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    items.forEach((li) => io.observe(li));
+    document.addEventListener('astro:before-swap', () => io.disconnect(), { once: true });
+  });
+</script>
