@@ -25,7 +25,7 @@ function headings() {
   if (hero) {
     const split = SplitText.create(hero, { type: 'lines', mask: 'lines' });
     gsap.from(split.lines, { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.09, delay: 0.1 });
-    gsap.from('.hero .lead, .hero .status, .intro .lead', { autoAlpha: 0, y: 16, duration: 0.9, ease: 'power3.out', delay: 0.45, stagger: 0.08 });
+    gsap.from('.hero .lead, .hero .playbadge, .hero .status, .intro .lead', { autoAlpha: 0, y: 16, duration: 0.9, ease: 'power3.out', delay: 0.45, stagger: 0.08 });
   }
   document.querySelectorAll<HTMLElement>('.head h2, .build-copy h2, .lv-head h2').forEach((h) => {
     const split = SplitText.create(h, { type: 'lines', mask: 'lines' });
@@ -61,6 +61,43 @@ function build() {
   tl.to('.build-hint', { autoAlpha: 0, duration: 1 }, 0);
 }
 
+/** The app tour: the phone stays while the steps and screens change with the scroll. */
+function tour() {
+  const section = document.querySelector<HTMLElement>('.tour');
+  if (!section) return;
+  const steps = [...section.querySelectorAll<HTMLElement>('.tour-steps li')];
+  const shots = [...section.querySelectorAll<HTMLElement>('.tour-phone .shot')];
+  const dots = [...section.querySelectorAll<HTMLElement>('.tour-dots span')];
+  let current = 0;
+  const show = (i: number) => {
+    if (i === current) return;
+    const down = i > current;
+    steps.forEach((s, k) => s.classList.toggle('on', k === i));
+    dots.forEach((d, k) => d.classList.toggle('on', k === i));
+    gsap.fromTo(steps[i], { autoAlpha: 0, y: down ? 24 : -24 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power3.out', overwrite: true });
+    gsap.set(steps[current], { autoAlpha: 0 });
+    shots.forEach((s, k) => { if (k !== i && k !== current) gsap.set(s, { opacity: 0, zIndex: 0 }); });
+    gsap.set(shots[current], { zIndex: 1 });
+    gsap.fromTo(shots[i], { opacity: 1, zIndex: 2, clipPath: down ? 'inset(100% 0% 0% 0% round 0)' : 'inset(0% 0% 100% 0% round 0)' },
+      { clipPath: 'inset(0% 0% 0% 0% round 0)', duration: 0.7, ease: 'expo.out', overwrite: true });
+    current = i;
+  };
+  ScrollTrigger.create({
+    trigger: section, pin: '.tour-pin', start: 'top top', end: () => `+=${innerHeight * (steps.length - 0.4) * 0.75}`,
+    anticipatePin: 1,
+    onUpdate: (st) => show(Math.min(steps.length - 1, Math.floor(st.progress * steps.length))),
+  });
+}
+
+/** The two phones in the hero drift apart a little as the page leaves. */
+function heroPhones() {
+  const back = document.querySelector('.hero-phone .back');
+  if (!back) return;
+  gsap.from('.hero-phone .phone', { y: 60, autoAlpha: 0, duration: 1.2, ease: 'expo.out', stagger: 0.12, delay: 0.3 });
+  gsap.to(back, { rotate: -14, xPercent: -10, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.hero-phone .phone:not(.back)', { rotate: 6, yPercent: -6, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+}
+
 /** Lists come in one row after another as they enter. */
 function lists() {
   const targets = '.drills li, .steps li, .words li, .faq details, .keys .key';
@@ -78,6 +115,6 @@ document.addEventListener('astro:page-load', () => {
   if (reduced()) return;
   smoothScroll();
   lenis?.scrollTo(0, { immediate: true });
-  ctx = gsap.context(() => { headings(); build(); lists(); });
+  ctx = gsap.context(() => { headings(); heroPhones(); tour(); build(); lists(); });
   document.fonts.ready.then(() => ScrollTrigger.refresh());
 });

@@ -1,0 +1,17 @@
+---
+/**
+ * Where to get the app. Until the Play listing exists this is a plain "coming soon" label;
+ * once it is live, swap it for Google's official "Get it on Google Play" badge linking to it.
+ */
+import type { Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = lang === 'es' ? { small: 'Muy pronto en', big: 'Google Play' } : { small: 'Coming soon to', big: 'Google Play' };
+---
+<span class="playbadge" role="note">
+  <span class="pb-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M5 3.5v17a.8.8 0 0 0 1.2.7l14.3-8.5a.8.8 0 0 0 0-1.4L6.2 2.8A.8.8 0 0 0 5 3.5Z" /></svg>
+  </span>
+  <span class="pb-text"><small>{t.small}</small>{t.big}</span>
+</span>

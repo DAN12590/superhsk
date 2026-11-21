@@ -27,8 +27,8 @@ export const nav: Record<Lang, { page: Page; label: string }[]> = {
 };
 
 export const common = {
-  en: { other: 'Español', contact: 'Contact', status: 'Coming soon to Google Play. Free, with no account and no ads.' },
-  es: { other: 'English', contact: 'Contacto', status: 'Muy pronto en Google Play. Gratis, sin cuenta y sin anuncios.' },
+  en: { other: 'Español', contact: 'Contact', status: 'Free, with no account and no ads.' },
+  es: { other: 'English', contact: 'Contacto', status: 'Gratis, sin cuenta y sin anuncios.' },
 };
 
 export const copy = {
@@ -44,6 +44,8 @@ export const copy = {
       done: 'Well done. That is how every character is practised in the app.',
       again: 'Write it again',
     },
+    try: { title: 'Try it now', lead: 'Watch 学中文 being written stroke by stroke, then write 学 yourself in the empty square.' },
+    final: { title: 'Start with 你好.', lead: 'SuperHSK is coming to Google Play soon. Free, with no account and no ads.' },
     tones: {
       title: 'Four tones change the word',
       lead: 'The same syllable means four different things depending on the tone. Tap each one to hear it.',
@@ -90,6 +92,8 @@ export const copy = {
       done: 'Muy bien. Así se practica cada carácter en la app.',
       again: 'Escribirlo otra vez',
     },
+    try: { title: 'Pruébalo ahora', lead: 'Mira cómo se escribe 学中文 trazo a trazo y luego escribe tú 学 en el cuadro vacío.' },
+    final: { title: 'Empieza por 你好.', lead: 'SuperHSK llega muy pronto a Google Play. Gratis, sin cuenta y sin anuncios.' },
     tones: {
       title: 'Cuatro tonos cambian la palabra',
       lead: 'La misma sílaba significa cuatro cosas distintas según el tono. Toca cada una para oírla.',

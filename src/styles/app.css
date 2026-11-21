@@ -1,0 +1,123 @@
+/* The site wears the app's own colours: warm paper, cinnabar red, sage green. */
+:root {
+  --paper: #f4ede0;
+  --paper-2: #ebe2d1;
+  --ink: #1f1b16;
+  --muted: #6b6157;
+  --grid: #a89a84;
+  --guide: #e0d6c3;
+  --jade: #2f6b4f;
+  --sage: #d3e3d7;
+  --seal: #a8302b;
+  --on-seal: #f8f1e6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #17130f;
+    --paper-2: #211b16;
+    --ink: #f1e8da;
+    --muted: #a99d8f;
+    --grid: #6a5d4e;
+    --guide: #2e2720;
+    --jade: #8cc7a6;
+    --sage: #22332a;
+    --seal: #e0574b;
+    --on-seal: #17130f;
+  }
+}
+
+/* ——— the phone frame ——— */
+.phone {
+  position: relative; aspect-ratio: 720 / 1600; width: 100%;
+  border-radius: 13% / 6%; padding: 3.2%;
+  background: #15110d;
+  box-shadow: 0 1px 0 1px #3a322a inset, 0 40px 80px -30px rgb(40 20 5 / 0.45), 0 18px 30px -18px rgb(40 20 5 / 0.35);
+}
+.phone .shot {
+  position: absolute; inset: 3.2%; width: 93.6%; height: 93.6%; object-fit: cover;
+  border-radius: 10.5% / 4.8%; opacity: 0;
+}
+.phone .shot.on { opacity: 1; }
+.phone::after { /* camera */
+  content: ''; position: absolute; top: 4.6%; left: 50%; width: 3.2%; aspect-ratio: 1; translate: -50% 0;
+  border-radius: 50%; background: #0a0806; box-shadow: 0 0 0 2px #2a231d;
+}
+
+/* ——— play badge ——— */
+.playbadge {
+  display: inline-flex; align-items: center; gap: 12px; margin-top: 34px;
+  padding: 10px 20px 10px 14px; border-radius: 12px; background: var(--ink); color: var(--paper);
+}
+.pb-icon { width: 30px; height: 30px; display: grid; place-items: center; }
+.pb-icon svg { width: 24px; height: 24px; fill: var(--paper); }
+.pb-text { display: grid; line-height: 1.1; font-weight: 600; font-size: 1.2rem; letter-spacing: -0.01em; }
+.pb-text small { font-size: 0.72rem; font-weight: 500; opacity: 0.75; letter-spacing: 0; }
+
+/* ——— hero with the app ——— */
+.hero {
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(32px, 5vw, 80px); align-items: center;
+  padding-bottom: clamp(40px, 6vw, 80px);
+}
+.hero .status { margin-top: 16px; font-weight: 500; color: var(--muted); }
+.hero-phone { position: relative; width: min(100%, 360px); justify-self: center; padding: 0 0 0 18%; }
+.hero-phone .phone { z-index: 1; }
+.hero-phone .phone.back {
+  position: absolute; z-index: 0; width: 78%; left: 0; top: 14%;
+  transform: rotate(-8deg); filter: saturate(0.9) brightness(0.97);
+}
+.hero-phone .phone:not(.back) { transform: rotate(3deg); }
+
+/* ——— the tour ——— */
+.tour { margin-top: clamp(40px, 7vw, 100px); }
+.tour-pin {
+  min-height: 100vh; min-height: 100svh; padding: 48px var(--gutter);
+  display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(32px, 6vw, 96px); align-items: center;
+}
+.tour-text h2 { font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.02; letter-spacing: -0.035em; margin-bottom: 36px; max-width: 12ch; }
+.tour-steps { list-style: none; margin: 0; padding: 0; display: grid; }
+.tour-steps li { grid-area: 1 / 1; opacity: 0; visibility: hidden; max-width: 30rem; }
+.tour-steps li.on { opacity: 1; visibility: visible; }
+.tour-steps h3 { font-size: clamp(1.5rem, 2.6vw, 2.2rem); letter-spacing: -0.025em; line-height: 1.1; }
+.tour-steps p { margin-top: 14px; color: var(--muted); font-size: 1.15rem; }
+.tour-dots { display: flex; gap: 8px; margin-top: 36px; }
+.tour-dots span { width: 28px; height: 4px; border-radius: 2px; background: var(--guide); transition: background 0.3s, width 0.3s; }
+.tour-dots span.on { background: var(--seal); width: 44px; }
+.tour-phone { width: min(100%, 340px); justify-self: center; }
+
+/* ——— try it ——— */
+.try .sheet { margin: 0; padding: 0; }
+.try .row { grid-template-columns: repeat(4, 1fr); }
+
+/* ——— final call ——— */
+.final {
+  margin: clamp(90px, 12vw, 160px) var(--gutter) 0; padding: clamp(40px, 6vw, 80px);
+  border-radius: 28px; background: var(--sage);
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 48px; align-items: center; overflow: hidden;
+}
+.final h2 { font-size: clamp(2.4rem, 5.5vw, 4.6rem); letter-spacing: -0.04em; line-height: 1; }
+.final p { margin-top: 18px; color: var(--muted); max-width: 30rem; font-size: 1.15rem; }
+.final .more { display: block; margin-top: 22px; font-weight: 600; }
+.final-phone { width: min(100%, 300px); justify-self: center; margin-bottom: calc(clamp(40px, 6vw, 80px) * -1 - 120px); }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .hero-phone { width: min(78%, 320px); margin-top: 16px; }
+  .tour-pin { grid-template-columns: minmax(0, 1fr); align-content: center; gap: 22px; padding-top: 24px; padding-bottom: 24px; }
+  .tour-text { order: 2; }
+  .tour-text h2 { display: none; }
+  .tour-steps p { font-size: 1rem; margin-top: 8px; }
+  .tour-dots { margin-top: 16px; }
+  .tour-phone { width: auto; height: min(58svh, 520px); justify-self: center; }
+  .final { grid-template-columns: minmax(0, 1fr); }
+  .final-phone { width: min(70%, 260px); }
+}
+@media (max-width: 620px) {
+  .try .row { grid-template-columns: repeat(2, 1fr); padding: 2px 0 0 2px; }
+  .try .row .cell, .try .row .cell + .cell { border-width: 2px; margin: -2px 0 0 -2px; grid-column: auto; width: auto; }
+}
+
+.final ~ * , main:has(.final) + .foot { margin-top: clamp(56px, 7vw, 96px); }
+@media (prefers-reduced-motion: reduce) {
+  .tour-steps li { grid-area: auto; opacity: 1; visibility: visible; margin-bottom: 28px; }
+  .tour-dots { display: none; }
+}

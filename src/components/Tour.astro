@@ -1,0 +1,56 @@
+---
+/**
+ * The app tour: a phone stays pinned while the reader scrolls, and its screen changes with
+ * each step of the text beside it. Screens are real captures of the app (public/shots/<lang>).
+ */
+import { url, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const T = {
+  en: {
+    title: 'Inside the app',
+    steps: [
+      ['today', 'A session for every day', 'Open the app and your day is ready: a tone warm-up, the next lesson and a quick review. About ten minutes, and you can skip any part.'],
+      ['lesson', 'A course in the right order', 'Units by topic, from greetings to your plans. Before each lesson you see the words you are about to learn.'],
+      ['word', 'Every word, piece by piece', 'Its sound, its tone, its meaning, and a trick to remember the character from the parts it is made of.'],
+      ['tones', 'Train your ear', 'Listen and pick the tone you hear, at the speed you choose. The trainer gets harder as you improve.'],
+      ['write', 'Write with your finger', 'Trace each character stroke by stroke. The app checks the order and the direction of every stroke.'],
+      ['dict', 'A dictionary that teaches', 'Every HSK word with its characters, radicals and memory tricks. Ask the AI when something is not clear.'],
+    ],
+  },
+  es: {
+    title: 'Así es la app por dentro',
+    steps: [
+      ['today', 'Una sesión para cada día', 'Abres la app y tu día está listo: calentamiento de tonos, la siguiente lección y un repaso. Unos diez minutos, y puedes saltarte cualquier parte.'],
+      ['lesson', 'Un curso en el orden correcto', 'Unidades por temas, de los saludos a tus planes. Antes de cada lección ves las palabras que vas a aprender.'],
+      ['word', 'Cada palabra, pieza a pieza', 'Su sonido, su tono, su significado y un truco para recordar el carácter a partir de las partes que lo forman.'],
+      ['tones', 'Entrena el oído', 'Escucha y elige el tono que oyes, a la velocidad que quieras. El entrenador se pone más difícil según mejoras.'],
+      ['write', 'Escribe con el dedo', 'Traza cada carácter trazo a trazo. La app comprueba el orden y la dirección de cada trazo.'],
+      ['dict', 'Un diccionario que enseña', 'Cada palabra del HSK con sus caracteres, radicales y trucos para recordarla. Pregunta a la IA si algo no está claro.'],
+    ],
+  },
+}[lang];
+---
+<section class="tour" aria-labelledby="tour-title">
+  <div class="tour-pin">
+    <div class="tour-text">
+      <h2 id="tour-title">{T.title}</h2>
+      <ol class="tour-steps">
+        {T.steps.map(([, title, text], i) => (
+          <li class={i === 0 ? 'on' : ''}>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="tour-dots" aria-hidden="true">{T.steps.map((_, i) => <span class={i === 0 ? 'on' : ''} />)}</div>
+    </div>
+    <div class="phone tour-phone">
+      {T.steps.map(([shot, title], i) => (
+        <img class={`shot ${i === 0 ? 'on' : ''}`} src={url(`shots/${lang}/${shot}.webp`)} alt={title} width="720" height="1600" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+      ))}
+    </div>
+  </div>
+</section>
