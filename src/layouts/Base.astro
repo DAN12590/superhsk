@@ -1,10 +1,12 @@
 ---
 import '../styles/global.css';
-import { copy, routes, url, EMAIL, type Lang } from '../i18n';
+import '../styles/pages.css';
+import { ClientRouter } from 'astro:transitions';
+import { common, nav, routes, url, EMAIL, type Lang, type Page } from '../i18n';
 
-interface Props { lang: Lang; title: string; description: string; page: 'home' | 'privacy' }
+interface Props { lang: Lang; title: string; description: string; page: Page }
 const { lang, title, description, page } = Astro.props;
-const t = copy[lang];
+const c = common[lang];
 const other: Lang = lang === 'en' ? 'es' : 'en';
 const home = url(routes[lang].home);
 ---
@@ -24,23 +26,25 @@ const home = url(routes[lang].home);
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet" />
+  <ClientRouter />
 </head>
 <body>
   <header class="bar">
     <a class="mark" href={home}><span class="seal" aria-hidden="true">汉</span>SuperHSK</a>
     <nav>
-      {page === 'home' && <a href="#app">{t.nav.app}</a>}
-      {page === 'home' && <a href="#levels">{t.nav.levels}</a>}
-      <a href={url(routes[lang].privacy)}>{t.nav.privacy}</a>
-      <a class="lang" href={url(routes[other][page])} hreflang={other}>{t.other}</a>
+      {nav[lang].map((item) => (
+        <a href={url(routes[lang][item.page])} aria-current={item.page === page ? 'page' : undefined}>{item.label}</a>
+      ))}
+      <a class="lang" href={url(routes[other][page])} hreflang={other} lang={other} data-astro-reload>{c.other}</a>
     </nav>
   </header>
-  <slot />
+  <div class="page" transition:animate="fade">
+    <slot />
+  </div>
   <footer class="foot">
     <span class="mark small"><span class="seal" aria-hidden="true">汉</span>SuperHSK</span>
-    <span>{t.footer.contact}: <a href={`mailto:${EMAIL}`}>{EMAIL}</a></span>
-    <a href={url(routes[lang].privacy)}>{t.footer.privacy}</a>
-    <a href={url(routes[other][page])} hreflang={other}>{t.other}</a>
+    <span>{c.contact}: <a href={`mailto:${EMAIL}`}>{EMAIL}</a></span>
+    {nav[lang].map((item) => <a href={url(routes[lang][item.page])}>{item.label}</a>)}
   </footer>
 </body>
 </html>

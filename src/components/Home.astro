@@ -1,18 +1,20 @@
 ---
 import Base from '../layouts/Base.astro';
-import { copy, routes, url, type Lang } from '../i18n';
+import { common, copy, routes, url, type Lang } from '../i18n';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = copy[lang];
 const word = ['学', '中', '文'];
+// Chao tone letters on a 1–5 scale, drawn left to right: 55, 35, 214, 51.
+const contours = ['M10 10 L190 10', 'M10 50 L190 10', 'M10 70 C50 98 95 98 190 30', 'M10 10 L190 90'];
 ---
 <Base lang={lang} title={t.title} description={t.description} page="home">
   <main>
     <section class="hero">
       <h1>{t.hero.title}</h1>
       <p class="lead">{t.hero.lead}</p>
-      <p class="status">{t.hero.status}</p>
+      <p class="status">{common[lang].status}</p>
 
       <figure class="sheet" aria-label={t.hero.caption}>
         <div class="row">
@@ -21,18 +23,46 @@ const word = ['学', '中', '文'];
               <div class="writer" data-char={hz}><span class="fallback">{hz}</span></div>
             </div>
           ))}
-          <div class="cell big ghost" aria-hidden="true"><span>学</span></div>
+          <div class="cell big turn"><div class="quiz" data-char="学"></div></div>
           <div class="cell big ghost" aria-hidden="true"><span>中</span></div>
           <div class="cell big ghost" aria-hidden="true"><span>文</span></div>
         </div>
-        <figcaption>{t.hero.caption}</figcaption>
+        <figcaption>
+          <span class="say" data-done={t.hero.done}>{t.hero.caption}</span>
+          <span class="prompt" role="status" data-text={t.hero.yourTurn}></span>
+          <button class="again" type="button" hidden>{t.hero.again}</button>
+        </figcaption>
       </figure>
+    </section>
+
+    <section class="block tones">
+      <div class="head">
+        <h2>{t.tones.title}</h2>
+        <p>{t.tones.lead}</p>
+        <p class="novoice" hidden>{t.tones.noVoice}</p>
+      </div>
+      <div class="tonepad">
+        <svg class="chart" viewBox="0 0 200 100" aria-hidden="true">
+          {[10, 30, 50, 70, 90].map((y) => <line x1="0" x2="200" y1={y} y2={y} />)}
+          {contours.map((d, i) => <path class={`c c${i + 1}`} d={d} pathLength="1" />)}
+        </svg>
+        <div class="keys">
+          {t.tones.items.map((item, i) => (
+            <button type="button" class="key" data-tone={i + 1} data-hz={item.hz}>
+              <span class="py">{item.py}</span>
+              <span class="hz">{item.hz}</span>
+              <span class="mn">{item.meaning}</span>
+            </button>
+          ))}
+        </div>
+      </div>
     </section>
 
     <section id="app" class="block">
       <div class="head">
         <h2>{t.app.title}</h2>
         <p>{t.app.lead}</p>
+        <a class="more" href={url(routes[lang].method)}>{t.app.more}</a>
       </div>
       <ul class="drills">
         {t.app.items.map((item) => (
@@ -45,22 +75,6 @@ const word = ['学', '中', '文'];
           </li>
         ))}
       </ul>
-    </section>
-
-    <section id="levels" class="block">
-      <div class="head">
-        <h2>{t.levels.title}</h2>
-        <p>{t.levels.lead}</p>
-      </div>
-      <ol class="path">
-        {t.levels.items.map((level, i) => (
-          <li class={i === 3 ? 'later' : ''}>
-            <span class="step">{level.name}</span>
-            <p>{level.text}</p>
-            <span class="state">{level.state}</span>
-          </li>
-        ))}
-      </ol>
     </section>
 
     <section class="block privacy">
@@ -78,38 +92,84 @@ const word = ['学', '中', '文'];
 <script>
   import HanziWriter from 'hanzi-writer';
 
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const css = getComputedStyle(document.documentElement);
-  const ink = css.getPropertyValue('--ink').trim();
-  const outline = css.getPropertyValue('--guide').trim();
-  const loaders = import.meta.glob('../data/*.json', { import: 'default' });
+  const data = import.meta.glob('../data/*.json', { import: 'default' });
+  const load = (c: string, done: (d: never) => void) => { data[`../data/${c}.json`]().then((d) => done(d as never)); };
 
-  const cells = [...document.querySelectorAll<HTMLElement>('.writer')];
-  const writers = cells.map((el) => {
-    const char = el.dataset.char!;
-    const size = el.clientWidth;
-    el.querySelector('.fallback')?.remove();
-    return HanziWriter.create(el, char, {
-      width: size,
-      height: size,
-      padding: size * 0.06,
-      strokeColor: ink,
-      outlineColor: outline,
-      showOutline: true,
-      showCharacter: reduced,
-      strokeAnimationSpeed: 1.1,
-      delayBetweenStrokes: 90,
-      charDataLoader: (c, done) => {
-        loaders[`../data/${c}.json`]().then((d) => done(d as never));
-      },
+  function hero() {
+    const sheet = document.querySelector('.sheet');
+    if (!sheet) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const css = getComputedStyle(document.documentElement);
+    const ink = css.getPropertyValue('--ink').trim();
+    const guide = css.getPropertyValue('--guide').trim();
+    const jade = css.getPropertyValue('--jade').trim();
+    const seal = css.getPropertyValue('--seal').trim();
+
+    const writers = [...sheet.querySelectorAll<HTMLElement>('.writer')].map((el) => {
+      const size = el.clientWidth;
+      el.innerHTML = '';
+      return HanziWriter.create(el, el.dataset.char!, {
+        width: size, height: size, padding: size * 0.06,
+        strokeColor: ink, outlineColor: guide, showOutline: true, showCharacter: reduced,
+        strokeAnimationSpeed: 1.1, delayBetweenStrokes: 90, charDataLoader: load,
+      });
     });
-  });
 
-  if (!reduced) {
-    // One orchestrated moment: the word is written once, character after character.
-    const run = async () => {
-      for (const w of writers) await w.animateCharacter();
+    const quizEl = sheet.querySelector<HTMLElement>('.quiz')!;
+    const prompt = sheet.querySelector<HTMLElement>('.prompt')!;
+    const say = sheet.querySelector<HTMLElement>('.say')!;
+    const again = sheet.querySelector<HTMLButtonElement>('.again')!;
+    const size = quizEl.clientWidth;
+    const quiz = HanziWriter.create(quizEl, quizEl.dataset.char!, {
+      width: size, height: size, padding: size * 0.06,
+      strokeColor: jade, outlineColor: guide, drawingColor: ink, highlightColor: seal,
+      showOutline: true, showCharacter: false, drawingWidth: Math.max(14, size / 14),
+      showHintAfterMisses: 2, highlightOnComplete: true, charDataLoader: load,
+    });
+
+    const startQuiz = () => {
+      quizEl.closest('.cell')!.classList.add('active');
+      prompt.textContent = prompt.dataset.text!;
+      say.hidden = true;
+      again.hidden = true;
+      quiz.quiz({
+        onComplete: () => {
+          prompt.textContent = say.dataset.done!;
+          again.hidden = false;
+        },
+      });
     };
-    setTimeout(run, 400);
+    again.onclick = () => { quiz.hideCharacter(); startQuiz(); };
+
+    if (reduced) { startQuiz(); return; }
+    setTimeout(async () => {
+      for (const w of writers) await w.animateCharacter();
+      startQuiz();
+    }, 400);
   }
+
+  function tones() {
+    const pad = document.querySelector('.tonepad');
+    if (!pad) return;
+    const voice = () => speechSynthesis.getVoices().find((v) => v.lang.replace('_', '-').toLowerCase().startsWith('zh-cn'))
+      ?? speechSynthesis.getVoices().find((v) => v.lang.toLowerCase().startsWith('zh'));
+    pad.querySelectorAll<HTMLButtonElement>('.key').forEach((key) => {
+      key.onclick = () => {
+        pad.querySelectorAll('.key').forEach((k) => k.classList.toggle('on', k === key));
+        const chart = pad.querySelector('.chart')!;
+        chart.setAttribute('data-tone', key.dataset.tone!);
+        const path = chart.querySelector<SVGPathElement>(`.c${key.dataset.tone}`)!;
+        chart.querySelectorAll('.c').forEach((p) => p.classList.remove('draw')); void path.getBoundingClientRect(); path.classList.add('draw');
+        if (!('speechSynthesis' in window)) return;
+        const v = voice();
+        if (!v) { document.querySelector<HTMLElement>('.novoice')!.hidden = false; return; }
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(key.dataset.hz);
+        u.voice = v; u.lang = v.lang; u.rate = 0.7;
+        speechSynthesis.speak(u);
+      };
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => { hero(); tones(); });
 </script>

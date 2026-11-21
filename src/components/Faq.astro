@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import { EMAIL, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const mail = `<a href="mailto:${EMAIL}">${EMAIL}</a>`;
+
+const F = {
+  en: {
+    title: 'Questions — SuperHSK',
+    h1: 'Questions',
+    lead: 'If yours is not here, write to us.',
+    items: [
+      ['Do I need to know any Chinese?', 'No. The first unit starts with pinyin and your first greetings, and every word is introduced before it is used.'],
+      ['Is it free?', 'Yes. The whole course is free, with no ads and no account.'],
+      ['What is HSK?', 'The official Chinese proficiency exam. It has levels, and each level has a list of words and grammar. The course follows those lists, so you learn what is actually used.'],
+      ['Will it prepare me for the HSK exam?', 'It teaches the words and grammar of each level, and each unit ends with an exam in a similar style. For the real exam, also practise with past papers.'],
+      ['Simplified or traditional characters?', 'Simplified, the ones used in mainland China and in the HSK exam.'],
+      ['Do I need an internet connection?', 'Not for most of the course. The AI conversations and speech recognition need a connection.'],
+      ['How long should I study each day?', 'Ten to twenty minutes is enough: a lesson and your reviews. Doing a little every day works better than a lot once a week.'],
+      ['What if I change phones?', 'Your progress is on your phone. Export a backup in the settings and import it on the new one.'],
+      ['Is there an iPhone version?', 'Not for now. SuperHSK is only for Android.'],
+      ['I found a mistake. How do I tell you?', `Every exercise has a button to report a problem, and it reaches us with the exercise attached. You can also write to ${mail}.`],
+    ],
+  },
+  es: {
+    title: 'Preguntas — SuperHSK',
+    h1: 'Preguntas',
+    lead: 'Si la tuya no está aquí, escríbenos.',
+    items: [
+      ['¿Necesito saber algo de chino?', 'No. La primera unidad empieza por el pinyin y tus primeros saludos, y cada palabra se presenta antes de usarla.'],
+      ['¿Es gratis?', 'Sí. Todo el curso es gratis, sin anuncios y sin cuenta.'],
+      ['¿Qué es el HSK?', 'El examen oficial de chino. Tiene niveles, y cada nivel tiene su lista de palabras y gramática. El curso sigue esas listas, así que aprendes lo que de verdad se usa.'],
+      ['¿Me prepara para el examen HSK?', 'Enseña las palabras y la gramática de cada nivel, y cada unidad acaba con un examen de estilo parecido. Para el examen de verdad, practica también con exámenes de otros años.'],
+      ['¿Caracteres simplificados o tradicionales?', 'Simplificados, los que se usan en China continental y en el examen HSK.'],
+      ['¿Necesito conexión a internet?', 'Para casi todo el curso, no. Las conversaciones con IA y el reconocimiento de voz sí la necesitan.'],
+      ['¿Cuánto tiempo al día?', 'Bastan entre diez y veinte minutos: una lección y tus repasos. Funciona mejor un poco cada día que mucho una vez a la semana.'],
+      ['¿Qué pasa si cambio de móvil?', 'Tu progreso está en tu móvil. Exporta una copia de seguridad en los ajustes e impórtala en el nuevo.'],
+      ['¿Hay versión para iPhone?', 'Por ahora no. SuperHSK es solo para Android.'],
+      ['He visto un error. ¿Cómo os aviso?', `Cada ejercicio tiene un botón para avisar de un fallo, y nos llega con el ejercicio incluido. También puedes escribir a ${mail}.`],
+    ],
+  },
+}[lang];
+---
+<Base lang={lang} title={F.title} description={F.lead} page="faq">
+  <main class="inner">
+    <header class="intro">
+      <h1>{F.h1}</h1>
+      <p class="lead" set:html={`${F.lead} ${mail}`} />
+    </header>
+    <div class="faq">
+      {F.items.map(([q, a]) => (
+        <details name="faq">
+          <summary>{q}</summary>
+          <div class="answer"><p set:html={a} /></div>
+        </details>
+      ))}
+    </div>
+  </main>
+</Base>

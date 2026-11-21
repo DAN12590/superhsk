@@ -1,27 +1,59 @@
 export type Lang = 'en' | 'es';
+export type Page = 'home' | 'method' | 'levels' | 'faq' | 'privacy';
 
 export const EMAIL = 'danapps.dev@gmail.com';
 
 /** A path inside the site, with the GitHub Pages base. */
 export const url = (path = '') => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path}`;
 
-export const routes = {
-  en: { home: '', privacy: 'privacy/' },
-  es: { home: 'es/', privacy: 'es/privacidad/' },
-} as const;
+export const routes: Record<Lang, Record<Page, string>> = {
+  en: { home: '', method: 'method/', levels: 'levels/', faq: 'faq/', privacy: 'privacy/' },
+  es: { home: 'es/', method: 'es/metodo/', levels: 'es/niveles/', faq: 'es/preguntas/', privacy: 'es/privacidad/' },
+};
+
+export const nav: Record<Lang, { page: Page; label: string }[]> = {
+  en: [
+    { page: 'method', label: 'Method' },
+    { page: 'levels', label: 'Levels' },
+    { page: 'faq', label: 'Questions' },
+    { page: 'privacy', label: 'Privacy' },
+  ],
+  es: [
+    { page: 'method', label: 'Método' },
+    { page: 'levels', label: 'Niveles' },
+    { page: 'faq', label: 'Preguntas' },
+    { page: 'privacy', label: 'Privacidad' },
+  ],
+};
+
+export const common = {
+  en: { other: 'Español', contact: 'Contact', status: 'Coming soon to Google Play. Free, with no account and no ads.' },
+  es: { other: 'English', contact: 'Contacto', status: 'Muy pronto en Google Play. Gratis, sin cuenta y sin anuncios.' },
+};
 
 export const copy = {
   en: {
-    other: 'Español',
     title: 'SuperHSK — Learn Chinese from zero to HSK 3',
     description:
       'An Android course that takes you from your first character to HSK 3: lessons in order, tones, writing stroke by stroke, reading and speaking. Free, no account, no ads.',
-    nav: { app: 'The app', levels: 'Levels', privacy: 'Privacy' },
     hero: {
       title: 'Learn Chinese one stroke at a time.',
       lead: 'SuperHSK is a course for Android that starts from zero and takes you to HSK 3. Every word comes with its sound, its tones and its characters, written in the right order.',
-      status: 'Coming soon to Google Play. Free, with no account and no ads.',
-      caption: 'xué zhōng wén · to study Chinese',
+      caption: 'xué Zhōngwén · to study Chinese',
+      yourTurn: 'Your turn: write 学 in the empty square, stroke by stroke.',
+      done: 'Well done. That is how every character is practised in the app.',
+      again: 'Write it again',
+    },
+    tones: {
+      title: 'Four tones change the word',
+      lead: 'The same syllable means four different things depending on the tone. Tap each one to hear it.',
+      items: [
+        { py: 'mā', hz: '妈', meaning: 'mother' },
+        { py: 'má', hz: '麻', meaning: 'hemp' },
+        { py: 'mǎ', hz: '马', meaning: 'horse' },
+        { py: 'mà', hz: '骂', meaning: 'to scold' },
+      ],
+      noVoice: 'Your browser has no Chinese voice, but you can still see the shape of each tone.',
     },
     app: {
       title: 'What you do in the app',
@@ -31,19 +63,10 @@ export const copy = {
         { hz: '音', title: 'Tones', text: 'Hear the four tones at the speed you choose and train your ear until mā and mà stop sounding the same.' },
         { hz: '写', title: 'Writing', text: 'Trace each character with your finger, stroke by stroke. The ones you have written turn green.' },
         { hz: '读', title: 'Reading', text: 'Short texts with only the words you know. Show the pinyin when you need it, tap a word to see its meaning.' },
-        { hz: '说', title: 'Speaking', text: 'Repeat after native audio, and play everyday situations where you have to order, ask or explain in Chinese.' },
+        { hz: '说', title: 'Speaking', text: 'Repeat after native audio, and role-play everyday situations where you have to order, ask or explain in Chinese.' },
         { hz: '记', title: 'Reviews', text: 'Words come back the day you are about to forget them, so a few minutes a day is enough.' },
       ],
-    },
-    levels: {
-      title: 'Four levels, one path',
-      lead: 'The course follows HSK, the official Chinese exam. You can start at the beginning or take a test to skip what you know.',
-      items: [
-        { name: 'HSK 1', text: 'Greetings, numbers, family, time.', state: 'Ready' },
-        { name: 'HSK 2', text: 'Shopping, food, directions, the weather.', state: 'Ready' },
-        { name: 'HSK 3', text: 'Your life, plans, feelings and opinions.', state: 'Ready' },
-        { name: 'HSK 4', text: 'Longer texts and nuance.', state: 'In updates' },
-      ],
+      more: 'See how a unit works',
     },
     privacy: {
       title: 'Your progress stays with you',
@@ -54,19 +77,29 @@ export const copy = {
       ],
       link: 'Read the privacy policy',
     },
-    footer: { contact: 'Contact', privacy: 'Privacy policy' },
   },
   es: {
-    other: 'English',
     title: 'SuperHSK — Aprende chino desde cero hasta el HSK 3',
     description:
       'Un curso para Android que te lleva de tu primer carácter al HSK 3: lecciones en orden, tonos, escritura trazo a trazo, lectura y conversación. Gratis, sin cuenta y sin anuncios.',
-    nav: { app: 'La app', levels: 'Niveles', privacy: 'Privacidad' },
     hero: {
       title: 'Aprende chino trazo a trazo.',
       lead: 'SuperHSK es un curso para Android que empieza desde cero y te lleva hasta el HSK 3. Cada palabra viene con su sonido, sus tonos y sus caracteres, escritos en el orden correcto.',
-      status: 'Muy pronto en Google Play. Gratis, sin cuenta y sin anuncios.',
-      caption: 'xué zhōng wén · estudiar chino',
+      caption: 'xué Zhōngwén · estudiar chino',
+      yourTurn: 'Te toca: escribe 学 en el cuadro vacío, trazo a trazo.',
+      done: 'Muy bien. Así se practica cada carácter en la app.',
+      again: 'Escribirlo otra vez',
+    },
+    tones: {
+      title: 'Cuatro tonos cambian la palabra',
+      lead: 'La misma sílaba significa cuatro cosas distintas según el tono. Toca cada una para oírla.',
+      items: [
+        { py: 'mā', hz: '妈', meaning: 'madre' },
+        { py: 'má', hz: '麻', meaning: 'cáñamo' },
+        { py: 'mǎ', hz: '马', meaning: 'caballo' },
+        { py: 'mà', hz: '骂', meaning: 'regañar' },
+      ],
+      noVoice: 'Tu navegador no tiene voz en chino, pero puedes ver la forma de cada tono.',
     },
     app: {
       title: 'Qué haces en la app',
@@ -79,16 +112,7 @@ export const copy = {
         { hz: '说', title: 'Conversación', text: 'Repite tras audios nativos y practica situaciones del día a día en las que tienes que pedir, preguntar o explicar en chino.' },
         { hz: '记', title: 'Repasos', text: 'Las palabras vuelven el día que estabas a punto de olvidarlas, así que te bastan unos minutos al día.' },
       ],
-    },
-    levels: {
-      title: 'Cuatro niveles, un camino',
-      lead: 'El curso sigue el HSK, el examen oficial de chino. Puedes empezar desde el principio o hacer una prueba para saltarte lo que ya sabes.',
-      items: [
-        { name: 'HSK 1', text: 'Saludos, números, familia, la hora.', state: 'Disponible' },
-        { name: 'HSK 2', text: 'Compras, comida, direcciones, el tiempo.', state: 'Disponible' },
-        { name: 'HSK 3', text: 'Tu vida, tus planes, lo que sientes y opinas.', state: 'Disponible' },
-        { name: 'HSK 4', text: 'Textos más largos y matices.', state: 'En actualizaciones' },
-      ],
+      more: 'Ver cómo funciona una unidad',
     },
     privacy: {
       title: 'Tu progreso se queda contigo',
@@ -99,6 +123,5 @@ export const copy = {
       ],
       link: 'Leer la política de privacidad',
     },
-    footer: { contact: 'Contacto', privacy: 'Política de privacidad' },
   },
 } as const;

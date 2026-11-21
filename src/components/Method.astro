@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import { routes, url, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const M = {
+  en: {
+    title: 'How a unit works — SuperHSK',
+    h1: 'How a unit works',
+    lead: 'The course is a path of units. Each one takes a topic, like ordering food or talking about your family, and walks you through it in the same seven steps.',
+    steps: [
+      { hz: '词', title: 'New words', text: 'Each word with its audio, pinyin, tones and an example sentence. You see it, hear it and pick its meaning.', sample: '咖啡 kāfēi' },
+      { hz: '法', title: 'Grammar', text: 'One or two patterns per unit, explained in plain language, with examples you can already read.', sample: '我想喝咖啡。' },
+      { hz: '听', title: 'Listening', text: 'Short dialogues at natural speed. Choose what you heard, then slow it down if you need to.', sample: '你要什么？' },
+      { hz: '读', title: 'Reading', text: 'A short text built only with words you know. Pinyin can be turned off as you get better.', sample: '我喜欢喝咖啡。' },
+      { hz: '写', title: 'Characters', text: 'Write the new characters with your finger. The app checks each stroke and its order.', sample: '咖 啡' },
+      { hz: '说', title: 'Speaking', text: 'Repeat sentences out loud and solve a situation with an AI partner, like ordering at a café.', sample: '我要一杯咖啡。' },
+      { hz: '考', title: 'Unit exam', text: 'A short exam with everything in the unit. Pass it and the next unit opens.', sample: '' },
+    ],
+    after: 'Between units, a few minutes of reviews each day bring back the words you are about to forget.',
+    back: 'Back to the home page',
+    levels: 'See the levels',
+  },
+  es: {
+    title: 'Cómo funciona una unidad — SuperHSK',
+    h1: 'Cómo funciona una unidad',
+    lead: 'El curso se divide en unidades. Cada una trata un tema, como pedir comida o hablar de tu familia, y lo recorre siempre en los mismos siete pasos.',
+    steps: [
+      { hz: '词', title: 'Palabras nuevas', text: 'Cada palabra con su audio, pinyin, tonos y una frase de ejemplo. La ves, la oyes y eliges qué significa.', sample: '咖啡 kāfēi' },
+      { hz: '法', title: 'Gramática', text: 'Una o dos estructuras por unidad, explicadas en claro, con ejemplos que ya puedes leer.', sample: '我想喝咖啡。' },
+      { hz: '听', title: 'Escuchar', text: 'Diálogos cortos a velocidad natural. Elige lo que has oído y bájale la velocidad si lo necesitas.', sample: '你要什么？' },
+      { hz: '读', title: 'Leer', text: 'Un texto corto hecho solo con palabras que conoces. Puedes quitar el pinyin según vas mejorando.', sample: '我喜欢喝咖啡。' },
+      { hz: '写', title: 'Caracteres', text: 'Escribe los caracteres nuevos con el dedo. La app comprueba cada trazo y su orden.', sample: '咖 啡' },
+      { hz: '说', title: 'Hablar', text: 'Repite frases en voz alta y resuelve una situación con un compañero de IA, como pedir en una cafetería.', sample: '我要一杯咖啡。' },
+      { hz: '考', title: 'Examen de la unidad', text: 'Un examen corto con todo lo de la unidad. Al aprobarlo se abre la siguiente.', sample: '' },
+    ],
+    after: 'Entre unidad y unidad, unos minutos de repaso al día te traen las palabras que estabas a punto de olvidar.',
+    back: 'Volver al inicio',
+    levels: 'Ver los niveles',
+  },
+}[lang];
+---
+<Base lang={lang} title={M.title} description={M.lead} page="method">
+  <main class="inner">
+    <header class="intro">
+      <h1>{M.h1}</h1>
+      <p class="lead">{M.lead}</p>
+    </header>
+    <ol class="steps">
+      {M.steps.map((s, i) => (
+        <li>
+          <div class="cell small" aria-hidden="true"><span>{s.hz}</span></div>
+          <div class="body">
+            <span class="n">{i + 1}</span>
+            <h2>{s.title}</h2>
+            <p>{s.text}</p>
+          </div>
+          <p class="sample" lang="zh-CN">{s.sample}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="after">{M.after}</p>
+    <p class="links"><a href={url(routes[lang].levels)}>{M.levels}</a><a href={url(routes[lang].home)}>{M.back}</a></p>
+  </main>
+</Base>

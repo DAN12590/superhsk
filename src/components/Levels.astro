@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import { routes, url, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+type Word = [string, string, string, string];
+const levels: { name: string; state: string; later?: boolean; about: string; words: Word[] }[] = [
+  {
+    name: 'HSK 1', state: es ? 'Disponible' : 'Ready',
+    about: es ? 'Lo básico para presentarte: saludos, números, la familia, la hora y lo que comes y bebes.' : 'The basics to introduce yourself: greetings, numbers, family, time and what you eat and drink.',
+    words: [['你好', 'nǐ hǎo', 'hello', 'hola'], ['谢谢', 'xièxie', 'thank you', 'gracias'], ['朋友', 'péngyou', 'friend', 'amigo'], ['喝', 'hē', 'to drink', 'beber'],
+            ['水', 'shuǐ', 'water', 'agua'], ['今天', 'jīntiān', 'today', 'hoy'], ['猫', 'māo', 'cat', 'gato'], ['学生', 'xuésheng', 'student', 'estudiante']],
+  },
+  {
+    name: 'HSK 2', state: es ? 'Disponible' : 'Ready',
+    about: es ? 'El día a día: ir de compras, pedir comida, moverte por la ciudad, el tiempo y tus planes.' : 'Everyday life: shopping, ordering food, getting around, the weather and your plans.',
+    words: [['咖啡', 'kāfēi', 'coffee', 'café'], ['旅游', 'lǚyóu', 'to travel', 'viajar'], ['便宜', 'piányi', 'cheap', 'barato'], ['生日', 'shēngrì', 'birthday', 'cumpleaños'],
+            ['准备', 'zhǔnbèi', 'to prepare', 'preparar'], ['已经', 'yǐjīng', 'already', 'ya'], ['快乐', 'kuàilè', 'happy', 'feliz'], ['送', 'sòng', 'to give', 'regalar']],
+  },
+  {
+    name: 'HSK 3', state: es ? 'Disponible' : 'Ready',
+    about: es ? 'Hablar de tu vida: costumbres, salud, lo que te interesa, lo que te preocupa y lo que has decidido.' : 'Talking about your life: habits, health, what interests or worries you and what you have decided.',
+    words: [['习惯', 'xíguàn', 'habit', 'costumbre'], ['健康', 'jiànkāng', 'health', 'salud'], ['决定', 'juédìng', 'to decide', 'decidir'], ['担心', 'dānxīn', 'to worry', 'preocuparse'],
+            ['环境', 'huánjìng', 'environment', 'entorno'], ['季节', 'jìjié', 'season', 'estación'], ['安静', 'ānjìng', 'quiet', 'tranquilo'], ['感兴趣', 'gǎn xìngqù', 'interested', 'interesarse']],
+  },
+  {
+    name: 'HSK 4', state: es ? 'En actualizaciones' : 'In updates', later: true,
+    about: es ? 'Textos más largos, opiniones y matices. Llega en actualizaciones, unidad a unidad.' : 'Longer texts, opinions and nuance. It arrives in updates, unit by unit.',
+    words: [['经验', 'jīngyàn', 'experience', 'experiencia'], ['解释', 'jiěshì', 'to explain', 'explicar'], ['尊重', 'zūnzhòng', 'to respect', 'respetar'], ['积极', 'jījí', 'active, positive', 'activo, positivo']],
+  },
+];
+const L = es
+  ? { title: 'Niveles — SuperHSK', h1: 'Los niveles', lead: 'El HSK es el examen oficial de chino. El curso sigue sus niveles, y cada uno se apoya en el anterior. Toca una palabra para ver qué significa.', method: 'Ver cómo funciona una unidad' }
+  : { title: 'Levels — SuperHSK', h1: 'The levels', lead: 'HSK is the official Chinese exam. The course follows its levels, and each one builds on the one before. Tap a word to see its meaning.', method: 'See how a unit works' };
+---
+<Base lang={lang} title={L.title} description={L.lead} page="levels">
+  <main class="inner">
+    <header class="intro">
+      <h1>{L.h1}</h1>
+      <p class="lead">{L.lead}</p>
+    </header>
+    {levels.map((lv) => (
+      <section class={`level ${lv.later ? 'later' : ''}`}>
+        <div class="lv-head">
+          <h2>{lv.name}</h2>
+          <span class="state">{lv.state}</span>
+          <p>{lv.about}</p>
+        </div>
+        <ul class="words">
+          {lv.words.map(([hz, py, en, esp]) => (
+            <li>
+              <button type="button" class="word" aria-pressed="false">
+                <span class="front"><span class="hz" lang="zh-CN">{hz}</span><span class="py">{py}</span></span>
+                <span class="back">{es ? esp : en}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+    <p class="links"><a href={url(routes[lang].method)}>{L.method}</a></p>
+  </main>
+</Base>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLButtonElement>('.word').forEach((b) => {
+      b.onclick = () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'));
+    });
+  });
+</script>
