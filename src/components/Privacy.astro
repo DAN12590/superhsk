@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import { EMAIL, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const mail = `<a href="mailto:${EMAIL}">${EMAIL}</a>`;
+
+const P = {
+  en: {
+    title: 'Privacy policy — SuperHSK',
+    h1: 'Privacy policy',
+    updated: 'Last updated on 21 November 2026.',
+    summary: 'SuperHSK has no accounts, no ads and no analytics. Your progress is stored only on your phone. Data leaves your phone only when you use a feature that needs it — AI exercises, speech recognition or sending us a message — and only what that feature needs.',
+    sections: [
+      ['Who we are', `SuperHSK is an app for learning Chinese made by an independent developer. For any question about this policy, write to ${mail}.`],
+      ['Data stored on your phone', 'Your course progress, reviews, settings and statistics are stored only on your device. We cannot see them. If you export a backup, the file is saved where you choose and is not sent to us. Uninstalling the app or clearing its data deletes all of it.'],
+    ],
+    outTitle: 'Data that leaves your phone',
+    cols: ['Feature', 'What is sent', 'Who receives it'],
+    rows: [
+      ['AI exercises', 'The text of the exercise and your answer. No name, account or contacts.', 'The AI service that answers (Groq or Google Gemini), through our server or directly.'],
+      ['Speaking exercises', 'Your voice while the microphone is on, to turn it into text.', 'Your phone’s speech recognition service, usually Google. The app keeps no recordings.'],
+      ['Messages and problem reports', 'What you write, the exercise you were on, the app version, the phone model and the app language.', 'Our feedback server, which forwards it to the developer.'],
+      ['Crash reports', 'The technical error, the app version, the phone model and the app language. No personal content.', 'Our feedback server, so the bug can be fixed.'],
+    ],
+    nosell: 'We do not sell your data or share it for advertising, and we do not use it to identify you.',
+    rest: [
+      ['Permissions', '<b>Microphone</b>, only for speaking exercises and only when you start one. <b>Notifications</b>, for the daily reminder if you turn it on. <b>Internet</b>, for AI exercises, speech recognition and messages; the rest of the app works offline.'],
+      ['Children', 'SuperHSK is not directed at children under 13 and does not knowingly collect their data.'],
+      ['Deleting your data', `Everything the app stores is on your phone: uninstall the app or clear its data in Android settings to delete it. To ask us to delete a message you sent, write to ${mail}.`],
+      ['Changes', 'If this policy changes, this page and its date will be updated.'],
+    ],
+  },
+  es: {
+    title: 'Política de privacidad — SuperHSK',
+    h1: 'Política de privacidad',
+    updated: 'Actualizada el 21 de noviembre de 2026.',
+    summary: 'SuperHSK no tiene cuentas, ni anuncios, ni analítica. Tu progreso se guarda solo en tu móvil. Los datos solo salen del móvil cuando usas una función que los necesita —ejercicios con IA, reconocimiento de voz o enviarnos un mensaje— y solo lo que esa función necesita.',
+    sections: [
+      ['Quiénes somos', `SuperHSK es una app para aprender chino hecha por un desarrollador independiente. Para cualquier duda sobre esta política, escribe a ${mail}.`],
+      ['Datos guardados en tu móvil', 'Tu progreso del curso, los repasos, los ajustes y las estadísticas se guardan solo en tu dispositivo. Nosotros no podemos verlos. Si exportas una copia de seguridad, el archivo se guarda donde elijas y no nos llega. Desinstalar la app o borrar sus datos lo elimina todo.'],
+    ],
+    outTitle: 'Datos que salen de tu móvil',
+    cols: ['Función', 'Qué se envía', 'Quién lo recibe'],
+    rows: [
+      ['Ejercicios con IA', 'El texto del ejercicio y tu respuesta. Ni nombre, ni cuenta, ni contactos.', 'El servicio de IA que responde (Groq o Google Gemini), a través de nuestro servidor o directamente.'],
+      ['Ejercicios de hablar', 'Tu voz mientras el micrófono está activo, para pasarla a texto.', 'El reconocimiento de voz de tu móvil, normalmente el de Google. La app no guarda grabaciones.'],
+      ['Mensajes y avisos de fallos', 'Lo que escribes, el ejercicio en el que estabas, la versión de la app, el modelo del móvil y el idioma de la app.', 'Nuestro servidor de mensajes, que se lo pasa al desarrollador.'],
+      ['Informes de cierres', 'El error técnico, la versión de la app, el modelo del móvil y el idioma de la app. Nada de contenido personal.', 'Nuestro servidor de mensajes, para poder arreglar el fallo.'],
+    ],
+    nosell: 'No vendemos tus datos ni los compartimos para publicidad, y no los usamos para identificarte.',
+    rest: [
+      ['Permisos', '<b>Micrófono</b>, solo para los ejercicios de hablar y solo cuando empiezas uno. <b>Notificaciones</b>, para el recordatorio diario si lo activas. <b>Internet</b>, para la IA, el reconocimiento de voz y los mensajes; el resto de la app funciona sin conexión.'],
+      ['Menores', 'SuperHSK no está dirigida a menores de 13 años y no recoge sus datos a sabiendas.'],
+      ['Borrar tus datos', `Todo lo que guarda la app está en tu móvil: desinstala la app o borra sus datos en los ajustes de Android para eliminarlo. Para pedirnos que borremos un mensaje que enviaste, escribe a ${mail}.`],
+      ['Cambios', 'Si esta política cambia, se actualizarán esta página y su fecha.'],
+    ],
+  },
+}[lang];
+---
+<Base lang={lang} title={P.title} description={P.summary} page="privacy">
+  <main class="doc">
+    <h1>{P.h1}</h1>
+    <p class="updated">{P.updated}</p>
+    <p class="summary">{P.summary}</p>
+    {P.sections.map(([h, body]) => (<><h2>{h}</h2><p set:html={body} /></>))}
+    <h2>{P.outTitle}</h2>
+    <table>
+      <thead><tr>{P.cols.map((c) => <th scope="col">{c}</th>)}</tr></thead>
+      <tbody>
+        {P.rows.map(([a, b, c]) => (
+          <tr><th scope="row">{a}</th><td data-label={P.cols[1]}>{b}</td><td data-label={P.cols[2]}>{c}</td></tr>
+        ))}
+      </tbody>
+    </table>
+    <p>{P.nosell}</p>
+    {P.rest.map(([h, body]) => (<><h2>{h}</h2><p set:html={body} /></>))}
+  </main>
+</Base>
