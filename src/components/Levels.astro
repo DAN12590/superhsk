@@ -27,9 +27,15 @@ const levels: { name: string; state: string; later?: boolean; about: string; wor
             ['环境', 'huánjìng', 'environment', 'entorno'], ['季节', 'jìjié', 'season', 'estación'], ['安静', 'ānjìng', 'quiet', 'tranquilo'], ['感兴趣', 'gǎn xìngqù', 'interested', 'interesarse']],
   },
   {
-    name: 'HSK 4', state: es ? 'En actualizaciones' : 'In updates', later: true,
-    about: es ? 'Textos más largos, opiniones y matices. Llega en actualizaciones, unidad a unidad.' : 'Longer texts, opinions and nuance. It arrives in updates, unit by unit.',
-    words: [['经验', 'jīngyàn', 'experience', 'experiencia'], ['解释', 'jiěshì', 'to explain', 'explicar'], ['尊重', 'zūnzhòng', 'to respect', 'respetar'], ['积极', 'jījí', 'active, positive', 'activo, positivo']],
+    name: 'HSK 4', state: es ? 'Disponible' : 'Ready',
+    about: es ? 'Textos más largos, opiniones y matices: noticias, trabajo, dinero, viajes y defender lo que piensas.' : 'Longer texts, opinions and nuance: news, work, money, travel and arguing your point.',
+    words: [['经验', 'jīngyàn', 'experience', 'experiencia'], ['解释', 'jiěshì', 'to explain', 'explicar'], ['尊重', 'zūnzhòng', 'to respect', 'respetar'], ['积极', 'jījí', 'active, positive', 'activo, positivo'],
+            ['建议', 'jiànyì', 'to suggest', 'sugerir'], ['也许', 'yěxǔ', 'perhaps', 'quizás'], ['甚至', 'shènzhì', 'even', 'incluso'], ['肯定', 'kěndìng', 'definitely', 'seguro']],
+  },
+  {
+    name: 'HSK 5', state: es ? 'En preparación' : 'In progress', later: true,
+    about: es ? 'Lecturas largas, chino escrito más formal y frases hechas. Llegará en dos partes, 5A y 5B, en actualizaciones.' : 'Long readings, more formal written Chinese and set phrases. It will arrive in two parts, 5A and 5B, in updates.',
+    words: [['未来', 'wèilái', 'future', 'futuro'], ['合作', 'hézuò', 'to cooperate', 'cooperar'], ['意义', 'yìyì', 'meaning', 'sentido'], ['曾经', 'céngjīng', 'once, in the past', 'alguna vez, antes']],
   },
 ];
 const L = es
@@ -43,11 +49,11 @@ const L = es
       <p class="lead">{L.lead}</p>
     </header>
     <div class="stairs" aria-hidden="true">
-      {[[1, 294], [2, 491], [3, 978], [4, 1978]].map(([n, w]) => (
-        <div class={`stair ${n === 4 ? 'later' : ''}`} style={`--h:${Math.sqrt(w / 1978).toFixed(3)}`}>
+      {[[1, 294], [2, 491], [3, 978], [4, 1950], [5, 3497]].map(([n, w]) => (
+        <div class={`stair ${n === 5 ? 'later' : ''}`} style={`--h:${Math.sqrt(w / 3497).toFixed(3)}`}>
           <b class="stair-n">{n}</b>
-          {n === 4
-            ? <span class="stair-l">{es ? 'En actualizaciones' : 'In updates'}</span>
+          {n === 5
+            ? <span class="stair-l">{es ? 'En preparación' : 'In progress'}</span>
             : <><span class="stair-w">{w}</span><span class="stair-l">{es ? 'palabras' : 'words'}</span></>}
         </div>
       ))}
