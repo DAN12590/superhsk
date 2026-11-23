@@ -56,18 +56,18 @@ export const footerNav: typeof nav = {
 
 export const copy = {
   en: {
-    title: 'SuperHSK — Learn Chinese from zero to HSK 4',
+    title: 'SuperHSK — Learn Chinese from zero to HSK 5',
     description:
-      'An Android course that takes you from your first character to HSK 4: lessons in order, tones, writing stroke by stroke, reading and speaking. Free, with no account.',
+      'An Android course that takes you from your first character to HSK 5: lessons in order, tones, writing stroke by stroke, reading and speaking. Free, with no account.',
     hero: {
       title: 'Learn Chinese one stroke at a time.',
-      lead: 'SuperHSK is a course for Android that starts from zero and takes you to HSK 4. Every word comes with its sound, its tones and its characters, written in the right order.',
+      lead: 'SuperHSK is a course for Android that starts from zero and takes you to HSK 5. Every word comes with its sound, its tones and its characters, written in the right order.',
       caption: 'xué Zhōngwén · to study Chinese',
       yourTurn: 'Your turn: write 学 in the empty square, stroke by stroke.',
       done: 'Well done. That is how every character is practised in the app.',
       again: 'Write it again',
     },
-    stats: { label: 'The course in numbers', items: [['70', 'units'], ['742', 'lessons'], ['1950', 'HSK 1–4 words'], ['4', 'HSK levels']] },
+    stats: { label: 'The course in numbers', items: [['114', 'units'], ['1250', 'lessons'], ['3497', 'HSK 1–5 words'], ['5', 'HSK levels']] },
     try: { title: 'Try it now', lead: 'Watch 学中文 being written stroke by stroke, then write 学 yourself in the empty square.' },
     final: { title: 'Start with 你好.', lead: 'SuperHSK is coming to Google Play soon. Free, with no account.' },
     tones: {
@@ -105,18 +105,18 @@ export const copy = {
     },
   },
   es: {
-    title: 'SuperHSK — Aprende chino desde cero hasta el HSK 4',
+    title: 'SuperHSK — Aprende chino desde cero hasta el HSK 5',
     description:
-      'Un curso para Android que te lleva de tu primer carácter al HSK 4: lecciones en orden, tonos, escritura trazo a trazo, lectura y conversación. Gratis y sin cuenta.',
+      'Un curso para Android que te lleva de tu primer carácter al HSK 5: lecciones en orden, tonos, escritura trazo a trazo, lectura y conversación. Gratis y sin cuenta.',
     hero: {
       title: 'Aprende chino trazo a trazo.',
-      lead: 'SuperHSK es un curso para Android que empieza desde cero y te lleva hasta el HSK 4. Cada palabra viene con su sonido, sus tonos y sus caracteres, escritos en el orden correcto.',
+      lead: 'SuperHSK es un curso para Android que empieza desde cero y te lleva hasta el HSK 5. Cada palabra viene con su sonido, sus tonos y sus caracteres, escritos en el orden correcto.',
       caption: 'xué Zhōngwén · estudiar chino',
       yourTurn: 'Te toca: escribe 学 en el cuadro vacío, trazo a trazo.',
       done: 'Muy bien. Así se practica cada carácter en la app.',
       again: 'Escribirlo otra vez',
     },
-    stats: { label: 'El curso en cifras', items: [['70', 'unidades'], ['742', 'lecciones'], ['1950', 'palabras de HSK 1–4'], ['4', 'niveles HSK']] },
+    stats: { label: 'El curso en cifras', items: [['114', 'unidades'], ['1250', 'lecciones'], ['3497', 'palabras de HSK 1–5'], ['5', 'niveles HSK']] },
     try: { title: 'Pruébalo ahora', lead: 'Mira cómo se escribe 学中文 trazo a trazo y luego escribe tú 学 en el cuadro vacío.' },
     final: { title: 'Empieza por 你好.', lead: 'SuperHSK llega muy pronto a Google Play. Gratis y sin cuenta.' },
     tones: {
