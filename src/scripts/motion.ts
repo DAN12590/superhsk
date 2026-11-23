@@ -3,7 +3,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import Lenis from 'lenis';
 import { startHalftone } from './halftone';
-import { startDragon } from './dragon';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -181,7 +180,6 @@ function toTop() {
 document.addEventListener('astro:page-load', () => {
   toTop();
   startHalftone();
-  startDragon();
   ctx?.revert();
   ScrollTrigger.getAll().forEach((t) => t.kill());
   if (reduced()) return;
