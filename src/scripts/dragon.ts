@@ -162,14 +162,19 @@ function tuft(ctx: CanvasRenderingContext2D, bx: number, by: number, tx: number,
   ctx.fillStyle = 'rgba(255, 240, 170, 0.55)'; ctx.fill();
 }
 
-let started = false;
+/** The dragon now on screen and how to stop it. Only the home page has a dragon canvas. */
+let active: { canvas: HTMLCanvasElement; stop: () => void } | null = null;
 
+/** Starts the dragon on pages that have its canvas and stops it on the ones that don't. */
 export function startDragon() {
-  if (started) return;
   const canvas = document.querySelector<HTMLCanvasElement>('.dragon');
+  if (active?.canvas === canvas) return;
+  active?.stop();
+  active = null;
   const ctx = canvas?.getContext('2d');
   if (!canvas || !ctx) return;
-  started = true;
+  const listeners = new AbortController();
+  const signal = listeners.signal;
 
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const dark = matchMedia('(prefers-color-scheme: dark)');
@@ -637,8 +642,16 @@ export function startDragon() {
   addEventListener('resize', () => {
     needsResize = true;
     if (reducedMotion.matches) still();
-  }, { passive: true });
-  reducedMotion.addEventListener('change', start);
-  dark.addEventListener('change', () => { if (reducedMotion.matches) still(); });
+  }, { passive: true, signal });
+  reducedMotion.addEventListener('change', start, { signal });
+  dark.addEventListener('change', () => { if (reducedMotion.matches) still(); }, { signal });
+  active = {
+    canvas,
+    stop: () => {
+      listeners.abort();
+      if (request !== undefined) cancelAnimationFrame(request);
+      request = undefined;
+    },
+  };
   start();
 }
