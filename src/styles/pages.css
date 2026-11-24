@@ -151,7 +151,7 @@ button { font: inherit; color: inherit; }
 }
 
 /* ——— levels: the words add up like stairs ——— */
-.stairs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: end; gap: 0; height: clamp(220px, 34vw, 380px); margin-top: clamp(48px, 7vw, 88px); border-bottom: 2px solid var(--grid); }
+.stairs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: end; gap: 0; height: clamp(220px, 34vw, 380px); margin-top: clamp(48px, 7vw, 88px); border-bottom: 2px solid var(--grid); }
 .stair { position: relative; height: calc(var(--h) * 100%); min-height: 120px; background: var(--jade); color: var(--paper); padding: 14px 16px; display: grid; align-content: start; gap: 2px; transform-origin: bottom; }
 .stair:nth-child(2) { background: color-mix(in srgb, var(--jade) 80%, var(--ink)); }
 .stair:nth-child(3) { background: var(--seal); }
@@ -163,7 +163,7 @@ button { font: inherit; color: inherit; }
 .stair-l { opacity: 0.8; font-size: 0.9rem; }
 .level { position: relative; }
 .lv-big { position: absolute; right: 0; top: 0.1em; z-index: -1; font-size: clamp(10rem, 26vw, 22rem); font-weight: 700; line-height: 0.8; letter-spacing: -0.08em; color: transparent; -webkit-text-stroke: 2px var(--guide); pointer-events: none; }
-@media (max-width: 520px) { .stair { padding: 10px 6px; } .stair-w { font-size: 0.9rem; } .stair-l { font-size: 0.75rem; } }
+@media (max-width: 520px) { .stair { padding: 10px 6px; } .stair-n { font-size: 1.6rem; } .stair-w { font-size: 0.9rem; } .stair-l { font-size: 0.75rem; } }
 
 /* ——— faq: a cell that writes 问 and answers 答 when you open one ——— */
 .faq-wrap { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: clamp(32px, 6vw, 96px); margin-top: clamp(48px, 7vw, 80px); }

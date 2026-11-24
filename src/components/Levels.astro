@@ -38,6 +38,12 @@ const levels: { name: string; state: string; later?: boolean; about: string; wor
     words: [['未来', 'wèilái', 'future', 'futuro'], ['合作', 'hézuò', 'to cooperate', 'cooperar'], ['意义', 'yìyì', 'meaning', 'sentido'], ['曾经', 'céngjīng', 'once, in the past', 'alguna vez, antes'],
             ['似乎', 'sìhū', 'to seem', 'parecer'], ['居然', 'jūrán', 'unexpectedly', 'sorprendentemente'], ['事业', 'shìyè', 'career', 'carrera'], ['媒体', 'méitǐ', 'media', 'medios']],
   },
+  {
+    name: 'HSK 6', state: es ? 'Más adelante' : 'Coming later', later: true,
+    about: es ? 'Llegará en una actualización: 1.140 palabras nuevas para leer textos de verdad, matizar y expresar ideas abstractas.' : 'Coming in an update: 1,140 new words to read real texts, add nuance and express abstract ideas.',
+    words: [['智慧', 'zhìhuì', 'wisdom', 'sabiduría'], ['平衡', 'pínghéng', 'balance', 'equilibrio'], ['和谐', 'héxié', 'harmony', 'armonía'], ['灵活', 'línghuó', 'flexible', 'flexible'],
+            ['协调', 'xiétiáo', 'to coordinate', 'coordinar'], ['创意', 'chuàngyì', 'creative idea', 'idea creativa'], ['仿佛', 'fǎngfú', 'as if', 'como si'], ['诞生', 'dànshēng', 'to be born', 'nacer']],
+  },
 ];
 const L = es
   ? { title: 'Niveles — SuperHSK', h1: 'Los niveles', lead: 'El HSK es el examen oficial de chino. El curso sigue sus niveles del HSK 3.0, la versión actual, y cada uno se apoya en el anterior. Toca una palabra para ver qué significa.', method: 'Ver cómo funciona una unidad' }
@@ -50,10 +56,12 @@ const L = es
       <p class="lead">{L.lead}</p>
     </header>
     <div class="stairs" aria-hidden="true">
-      {[[1, 294], [2, 491], [3, 978], [4, 1950], [5, 3497]].map(([n, w]) => (
-        <div class="stair" style={`--h:${Math.sqrt(w / 3497).toFixed(3)}`}>
+      {[[1, 294], [2, 491], [3, 978], [4, 1950], [5, 3497], [6, 4637]].map(([n, w]) => (
+        <div class={`stair ${n === 6 ? 'later' : ''}`} style={`--h:${Math.sqrt(w / 4637).toFixed(3)}`}>
           <b class="stair-n">{n}</b>
-          <span class="stair-w">{w}</span><span class="stair-l">{es ? 'palabras' : 'words'}</span>
+          {n === 6
+            ? <><span class="stair-w">+1140</span><span class="stair-l">{es ? 'más adelante' : 'coming later'}</span></>
+            : <><span class="stair-w">{w}</span><span class="stair-l">{es ? 'palabras' : 'words'}</span></>}
         </div>
       ))}
     </div>

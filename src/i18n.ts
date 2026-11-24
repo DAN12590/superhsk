@@ -61,7 +61,7 @@ export const copy = {
       'An Android course that takes you from your first character to HSK 5: lessons in order, tones, writing stroke by stroke, reading and speaking. Free, with no account.',
     hero: {
       title: 'Learn Chinese one stroke at a time.',
-      lead: 'SuperHSK is a course for Android that starts from zero and takes you to HSK 5. Every word comes with its sound, its tones and its characters, written in the right order.',
+      lead: 'SuperHSK is a course for Android that starts from zero and takes you to HSK 5, with HSK 6 coming later. Every word comes with its sound, its tones and its characters, written in the right order.',
       caption: 'xué Zhōngwén · to study Chinese',
       yourTurn: 'Your turn: write 学 in the empty square, stroke by stroke.',
       done: 'Well done. That is how every character is practised in the app.',
@@ -110,7 +110,7 @@ export const copy = {
       'Un curso para Android que te lleva de tu primer carácter al HSK 5: lecciones en orden, tonos, escritura trazo a trazo, lectura y conversación. Gratis y sin cuenta.',
     hero: {
       title: 'Aprende chino trazo a trazo.',
-      lead: 'SuperHSK es un curso para Android que empieza desde cero y te lleva hasta el HSK 5. Cada palabra viene con su sonido, sus tonos y sus caracteres, escritos en el orden correcto.',
+      lead: 'SuperHSK es un curso para Android que empieza desde cero y te lleva hasta el HSK 5 (el HSK 6 llegará más adelante). Cada palabra viene con su sonido, sus tonos y sus caracteres, escritos en el orden correcto.',
       caption: 'xué Zhōngwén · estudiar chino',
       yourTurn: 'Te toca: escribe 学 en el cuadro vacío, trazo a trazo.',
       done: 'Muy bien. Así se practica cada carácter en la app.',
