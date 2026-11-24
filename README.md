@@ -2,7 +2,7 @@
 
 Website of SuperHSK, an Android app for learning Chinese from scratch, from HSK 1 to HSK 4.
 
-**Live site: [dan12590.github.io/superhsk](https://dan12590.github.io/superhsk/)** · [Español](https://dan12590.github.io/superhsk/es/)
+**Live site: [superhsk.danapps.dev](https://superhsk.danapps.dev/)** · [Español](https://superhsk.danapps.dev/es/)
 
 Built with [Astro](https://astro.build) and deployed to GitHub Pages on every push to `main`.
 

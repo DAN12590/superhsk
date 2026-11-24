@@ -3,7 +3,7 @@ export type Page = 'home' | 'method' | 'levels' | 'faq' | 'privacy' | 'terms' | 
 
 export const EMAIL = 'danapps.dev@gmail.com';
 
-/** A path inside the site, with the GitHub Pages base. */
+/** A path inside the site, with the site base. */
 export const url = (path = '') => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path}`;
 
 export const routes: Record<Lang, Record<Page, string>> = {
